@@ -31,10 +31,10 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 */
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-// import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.AfterAll;
@@ -76,37 +76,11 @@ import org.apache.logging.log4j.util.SortedArrayStringMap;
 import org.apache.logging.log4j.util.StringMap;
 import org.apache.logging.log4j.util.Strings;
 
-class JUnit5Shim {
-    void assertTrue(boolean condition) {
-        org.junit.jupiter.api.Assertions.assertTrue(condition);
-    }
-
-    void assertTrue(String message, boolean condition) {
-        org.junit.jupiter.api.Assertions.assertTrue(condition, message);
-    }
-
-    void assertFalse(boolean condition) {
-        org.junit.jupiter.api.Assertions.assertFalse(condition);
-    }
-
-    void assertFalse(String message, boolean condition) {
-        org.junit.jupiter.api.Assertions.assertFalse(condition, message);
-    }
-
-    void assertEquals(String message, boolean expected, boolean actual) {
-        org.junit.jupiter.api.Assertions.assertEquals(expected, actual, message);
-    }
-
-    void assertEquals(Object expected, Object actual) {
-        org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
-    }
-}
-
 /**
  * Tests the JsonLayout class.
  */
 @Tag("json")
-public class JsonLayoutTest extends JUnit5Shim {
+public class JsonLayoutTest {
     static ConfigurationFactory cf = new BasicConfigurationFactory();
 
     private static final String DQUOTE = "\"";
@@ -132,7 +106,9 @@ public class JsonLayoutTest extends JUnit5Shim {
     private void checkAt(final String expected, final int lineIndex, final List<String> list) {
         final String trimedLine = list.get(lineIndex).trim();
         assertTrue(
-                "Incorrect line index " + lineIndex + ": " + Strings.dquote(trimedLine), trimedLine.equals(expected));
+             trimedLine.equals(expected),
+             "Incorrect line index " + lineIndex + ": " + Strings.dquote(trimedLine)
+        );
     }
 
     private void checkContains(final String expected, final List<String> list) {
@@ -155,11 +131,11 @@ public class JsonLayoutTest extends JUnit5Shim {
         if (contextMapAslist) {
             // {"key":"KEY", "value":"VALUE"}
             final String expected = String.format("{\"key\":\"%s\",\"value\":\"%s\"}", key, value);
-            assertTrue("Cannot find contextMapAslist " + expected + " in " + str, str.contains(expected));
+            assertTrue(str.contains(expected), "Cannot find contextMapAslist " + expected + " in " + str);
         } else {
             // "KEY":"VALUE"
             final String expected = String.format("\"%s\":\"%s\"", key, value);
-            assertTrue("Cannot find contextMap " + expected + " in " + str, str.contains(expected));
+            assertTrue(str.contains(expected), "Cannot find contextMap " + expected + " in " + str);
         }
     }
 
@@ -167,17 +143,17 @@ public class JsonLayoutTest extends JUnit5Shim {
         final String propSep = this.toPropertySeparator(compact);
         // {"key":"MDC.B","value":"B_Value"}
         final String expected = String.format("\"%s\"%s\"%s\"", key, propSep, value);
-        assertTrue("Cannot find " + expected + " in " + str, str.contains(expected));
+        assertTrue(str.contains(expected), "Cannot find " + expected + " in " + str);
     }
 
     private void checkPropertyName(final String name, final boolean compact, final String str) {
         final String propSep = this.toPropertySeparator(compact);
-        assertTrue(str, str.contains(DQUOTE + name + DQUOTE + propSep));
+        assertTrue(str.contains(DQUOTE + name + DQUOTE + propSep), str);
     }
 
     private void checkPropertyNameAbsent(final String name, final boolean compact, final String str) {
         final String propSep = this.toPropertySeparator(compact);
-        assertFalse(str, str.contains(DQUOTE + name + DQUOTE + propSep));
+        assertFalse(str.contains(DQUOTE + name + DQUOTE + propSep), str);
     }
 
     private void testAllFeatures(
@@ -207,13 +183,13 @@ public class JsonLayoutTest extends JUnit5Shim {
         this.toPropertySeparator(compact);
         if (endOfLine == null) {
             // Just check for \n since \r might or might not be there.
-            assertEquals(str, !compact || eventEol, str.contains("\n"));
+            assertEquals(!compact || eventEol, str.contains("\n"), str);
         } else {
-            assertEquals(str, !compact || eventEol, str.contains(endOfLine));
-            assertEquals(str, compact && eventEol, str.endsWith(endOfLine));
+            assertEquals(!compact || eventEol, str.contains(endOfLine), str);
+            assertEquals(compact && eventEol, str.endsWith(endOfLine), str);
         }
-        assertEquals(str, locationInfo, str.contains("source"));
-        assertEquals(str, includeContext, str.contains("contextMap"));
+        assertEquals(locationInfo, str.contains("source"), str);
+        assertEquals(includeContext, str.contains("contextMap"), str);
 
         final Log4jLogEvent actual = new Log4jJsonObjectMapper(contextMapAslist, includeStacktrace, false, false)
                 .readValue(str, Log4jLogEvent.class);
@@ -414,7 +390,7 @@ public class JsonLayoutTest extends JUnit5Shim {
                 .build();
         // @formatter:on
         final String str = layout.toSerializable(expected);
-        assertTrue(str, str.contains("\"loggerName\":\"a.B\""));
+        assertTrue(str.contains("\"loggerName\":\"a.B\""), str);
         final Log4jLogEvent actual =
                 new Log4jJsonObjectMapper(propertiesAsList, true, false, false).readValue(str, Log4jLogEvent.class);
         assertEquals(expected.getLoggerName(), actual.getLoggerName());
@@ -437,8 +413,8 @@ public class JsonLayoutTest extends JUnit5Shim {
                 .setConfiguration(ctx.getConfiguration())
                 .build();
         final String str = layout.toSerializable(LogEventFixtures.createLogEvent());
-        assertTrue(str, str.contains("\"KEY1\":\"VALUE1\""));
-        assertTrue(str, str.contains("\"KEY2\":\"" + new JavaLookup().getRuntime() + "\""));
+        assertTrue(str.contains("\"KEY1\":\"VALUE1\""), str);
+        assertTrue(str.contains("\"KEY2\":\"" + new JavaLookup().getRuntime() + "\""), str);
     }
 
     // Test for LOG4J2-2345
@@ -469,10 +445,10 @@ public class JsonLayoutTest extends JUnit5Shim {
             mutableLogEvent.initFrom(expected);
             final String str = layout.toSerializable(mutableLogEvent);
             final String expectedMessage = "Testing " + TestObj.TO_STRING_VALUE;
-            assertTrue(str, str.contains("\"message\":\"" + expectedMessage + '"'));
+            assertTrue(str.contains("\"message\":\"" + expectedMessage + '"'), str);
             final Log4jLogEvent actual =
                     new Log4jJsonObjectMapper(propertiesAsList, true, false, false).readValue(str, Log4jLogEvent.class);
-            assertEquals(expectedMessage, actual.getMessage().getFormattedMessage());
+            assertEquals(actual.getMessage().getFormattedMessage(), expectedMessage);
         } finally {
             ReusableMessageFactory.release(message);
         }
@@ -516,7 +492,7 @@ public class JsonLayoutTest extends JUnit5Shim {
             assertThat(str, containsString("\"message\":\"" + expectedMessage + '"'));
             final Log4jLogEvent actual =
                     new Log4jJsonObjectMapper(propertiesAsList, true, false, false).readValue(str, Log4jLogEvent.class);
-            assertEquals(expectedMessage, actual.getMessage().getFormattedMessage());
+            assertEquals(actual.getMessage().getFormattedMessage(), expectedMessage);
         } finally {
             ReusableMessageFactory.release(message);
         }
@@ -564,13 +540,13 @@ public class JsonLayoutTest extends JUnit5Shim {
     @Test
     public void testStacktraceAsString() throws Exception {
         final String str = prepareJSONForStacktraceTests(true);
-        assertTrue(str, str.contains("\"extendedStackTrace\":\"java.lang.NullPointerException"));
+        assertTrue(str.contains("\"extendedStackTrace\":\"java.lang.NullPointerException"), str);
     }
 
     @Test
     public void testStacktraceAsNonString() throws Exception {
         final String str = prepareJSONForStacktraceTests(false);
-        assertTrue(str, str.contains("\"extendedStackTrace\":["));
+        assertTrue(str.contains("\"extendedStackTrace\":["), str);
     }
 
     private String prepareJSONForStacktraceTests(final boolean stacktraceAsString) {
@@ -588,13 +564,13 @@ public class JsonLayoutTest extends JUnit5Shim {
     @Test
     public void testObjectMessageAsJsonString() {
         final String str = prepareJSONForObjectMessageAsJsonObjectTests(1234, false);
-        assertTrue(str, str.contains("\"message\":\"" + this.getClass().getCanonicalName() + "$TestClass@"));
+        assertTrue(str.contains("\"message\":\"" + this.getClass().getCanonicalName() + "$TestClass@"), str);
     }
 
     @Test
     public void testObjectMessageAsJsonObject() {
         final String str = prepareJSONForObjectMessageAsJsonObjectTests(1234, true);
-        assertTrue(str, str.contains("\"message\":{\"value\":1234}"));
+        assertTrue(str.contains("\"message\":{\"value\":1234}"), str);
     }
 
     private String prepareJSONForObjectMessageAsJsonObjectTests(
@@ -622,8 +598,8 @@ public class JsonLayoutTest extends JUnit5Shim {
     @Test
     public void testInstantSortsBeforeMessage() {
         final String str = prepareJSONForEventWithTimeAsInstant();
-        assertTrue(str, str.startsWith("{\"instant\":{\"epochSecond\":0,\"nanoOfSecond\":1000000},"));
-        assertTrue(str, str.contains("\"message\":\"message\""));
+        assertTrue(str.startsWith("{\"instant\":{\"epochSecond\":0,\"nanoOfSecond\":1000000},"), str);
+        assertTrue(str.contains("\"message\":\"message\""), str);
     }
 
     private String prepareJSONForEventWithTimeAsInstant() {
@@ -675,7 +651,7 @@ public class JsonLayoutTest extends JUnit5Shim {
                 .build();
 
         final String str = layout.toSerializable(LogEventFixtures.createLogEvent());
-        assertFalse(str, str.contains("\"empty\""));
+        assertFalse(str.contains("\"empty\""), str);
     }
 
     /**
