@@ -18,10 +18,29 @@ package org.apache.logging.log4j.core.layout;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+/*
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+*/
+
+// import static org.junit.jupiter.api.Assertions.assertEquals;
+// import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+// import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Assertions;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -56,28 +75,49 @@ import org.apache.logging.log4j.spi.AbstractLogger;
 import org.apache.logging.log4j.util.SortedArrayStringMap;
 import org.apache.logging.log4j.util.StringMap;
 import org.apache.logging.log4j.util.Strings;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+
+class JUnit5Shim {
+    void assertTrue(boolean condition) {
+        org.junit.jupiter.api.Assertions.assertTrue(condition);
+    }
+
+    void assertTrue(String message, boolean condition) {
+        org.junit.jupiter.api.Assertions.assertTrue(condition, message);
+    }
+
+    void assertFalse(boolean condition) {
+        org.junit.jupiter.api.Assertions.assertFalse(condition);
+    }
+
+    void assertFalse(String message, boolean condition) {
+        org.junit.jupiter.api.Assertions.assertFalse(condition, message);
+    }
+
+    void assertEquals(String message, boolean expected, boolean actual) {
+        org.junit.jupiter.api.Assertions.assertEquals(expected, actual, message);
+    }
+
+    void assertEquals(Object expected, Object actual) {
+        org.junit.jupiter.api.Assertions.assertEquals(expected, actual);
+    }
+}
 
 /**
  * Tests the JsonLayout class.
  */
-@Category(Layouts.Json.class)
-public class JsonLayoutTest {
+@Tag("json")
+public class JsonLayoutTest extends JUnit5Shim {
     static ConfigurationFactory cf = new BasicConfigurationFactory();
 
     private static final String DQUOTE = "\"";
 
-    @AfterClass
+    @AfterAll
     public static void cleanupClass() {
         ConfigurationFactory.removeConfigurationFactory(cf);
         ThreadContext.clearAll();
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         ThreadContext.clearAll();
         ConfigurationFactory.setConfigurationFactory(cf);
@@ -102,7 +142,7 @@ public class JsonLayoutTest {
                 return;
             }
         }
-        Assert.fail("Cannot find " + expected + " in " + list);
+        Assertions.fail("Cannot find " + expected + " in " + list);
     }
 
     private void checkMapEntry(
