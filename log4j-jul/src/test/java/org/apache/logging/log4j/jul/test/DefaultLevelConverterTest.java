@@ -16,9 +16,10 @@
  */
 package org.apache.logging.log4j.jul.test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.logging.log4j.jul.DefaultLevelConverter;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class DefaultLevelConverterTest {
 
@@ -27,6 +28,6 @@ public class DefaultLevelConverterTest {
      */
     @Test
     public void testJulSetNull() {
-        Assert.assertEquals(null, new DefaultLevelConverter().toLevel(null));
+        assertEquals(null, new DefaultLevelConverter().toLevel(null));
     }
 }
