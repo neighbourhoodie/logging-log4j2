@@ -19,19 +19,16 @@ package org.apache.logging.log4j.core.appender.rolling;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.net.URI;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -44,26 +41,21 @@ public class RollingAppenderDirectWriteWithReconfigureTest {
 
     private static final int MAX_TRIES = 10;
 
-    public static LoggerContextRule loggerContextRule =
-            LoggerContextRule.createShutdownTimeoutLoggerContextRule(CONFIG);
-
-    @Rule
-    public RuleChain chain = loggerContextRule.withCleanFoldersRule(DIR);
-
     private Logger logger;
 
-    @Before
-    public void setUp() {
-        this.logger = loggerContextRule.getLogger(RollingAppenderDirectWriteWithReconfigureTest.class.getName());
+    @BeforeEach
+    @LoggerContextSource(value = CONFIG, timeout = 10)
+    public void setUp(LoggerContext context) {
+        this.logger = context.getLogger(RollingAppenderDirectWriteWithReconfigureTest.class.getName());
     }
 
     @Test
-    public void testRollingFileAppenderWithReconfigure() throws Exception {
+    @LoggerContextSource(value = CONFIG, timeout = 10)
+    public void testRollingFileAppenderWithReconfigure(LoggerContext context) throws Exception {
         logger.debug("Before reconfigure");
 
         @SuppressWarnings("resource") // managed by the rule.
-        final LoggerContext context = loggerContextRule.getLoggerContext();
-        final Configuration config = context.getConfiguration();
+        final LoggerContext config = context.getConfiguration().getLoggerContext();
         context.setConfigLocation(new URI(CONFIG));
         context.reconfigure();
         logger.debug("Force a rollover");
@@ -75,7 +67,7 @@ public class RollingAppenderDirectWriteWithReconfigureTest {
             }
         }
 
-        assertTrue("Directory not created", dir.exists() && dir.listFiles().length > 0);
+        assertTrue(dir.exists() && dir.listFiles().length > 0, "Directory not created");
         final File[] files = dir.listFiles();
         assertNotNull(files);
         assertThat(dir.listFiles().length, is(equalTo(2)));

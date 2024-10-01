@@ -22,8 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.Appender;
@@ -41,8 +39,12 @@ import org.junit.jupiter.api.TestInfo;
 class OutputStreamAppenderTest {
 
     private static final String TEST_MSG = "FOO ERROR";
+    private String testName;
 
-    public String testName;
+    @BeforeEach
+    public void setup(TestInfo testInfo) {
+        testName = testInfo.getDisplayName();
+    }
 
     private String getName(final OutputStream out) {
         return out.getClass().getSimpleName() + "." + testName;
@@ -65,10 +67,8 @@ class OutputStreamAppenderTest {
     @Test
     void testBuildFilter() {
         final NoMarkerFilter filter = NoMarkerFilter.newBuilder().build();
-        // @formatter:off
         final OutputStreamAppender.Builder builder =
                 OutputStreamAppender.newBuilder().setName("test").setFilter(filter);
-        // @formatter:on
         assertEquals(filter, builder.getFilter());
         final OutputStreamAppender appender = builder.build();
         assertEquals(filter, appender.getFilter());
@@ -121,11 +121,5 @@ class OutputStreamAppenderTest {
         config.addAppender(appender);
         ConfigurationTestUtils.updateLoggers(appender, config);
         LogManager.getLogger().error("FOO MSG");
-    }
-
-    @BeforeEach
-    public void setup(TestInfo testInfo) {
-        Optional<Method> testMethod = testInfo.getTestMethod();
-        testMethod.ifPresent(method -> this.testName = method.getName());
     }
 }

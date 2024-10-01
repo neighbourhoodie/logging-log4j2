@@ -18,10 +18,9 @@ package org.apache.logging.log4j.core.config;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
+import java.util.stream.Stream;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.xml.XmlConfiguration;
@@ -33,13 +32,13 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 class NestedLoggerConfigTest {
 
-    public static List<String> data() {
-        return ImmutableList.of("logger-config/LoggerConfig/", "logger-config/AsyncLoggerConfig/");
+    public static Stream<String> data() {
+        return Stream.of("logger-config/LoggerConfig/", "logger-config/AsyncLoggerConfig/");
     }
 
-    @MethodSource("data")
     @ParameterizedTest(name = "{0}")
-    void testInheritParentDefaultLevel(final String prefix) throws IOException {
+    @MethodSource("data")
+    void testInheritParentDefaultLevel(String prefix) throws IOException {
         final Configuration configuration = loadConfiguration(prefix + "default-level.xml");
         try {
             assertEquals(Level.ERROR, configuration.getLoggerConfig("com.foo").getLevel());
@@ -48,9 +47,9 @@ class NestedLoggerConfigTest {
         }
     }
 
-    @MethodSource("data")
     @ParameterizedTest(name = "{0}")
-    void testInheritParentLevel(final String prefix) throws IOException {
+    @MethodSource("data")
+    void testInheritParentLevel(String prefix) throws IOException {
         final Configuration configuration = loadConfiguration(prefix + "inherit-level.xml");
         try {
             assertEquals(Level.TRACE, configuration.getLoggerConfig("com.foo").getLevel());

@@ -21,7 +21,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import org.apache.logging.log4j.core.test.appender.db.jdbc.JdbcH2TestHelper;
 import org.apache.logging.log4j.core.test.junit.JdbcRule;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  *
@@ -39,12 +39,12 @@ public class JdbcAppenderH2FactoryMethodTest extends AbstractJdbcAppenderFactory
                 "h2");
     }
 
-    @Before
+    @BeforeEach
     public void afterEachDeleteDir() throws IOException {
         JdbcH2TestHelper.deleteDir();
     }
 
-    @Before
+    @BeforeEach
     public void beforeEachDeleteDir() throws IOException {
         JdbcH2TestHelper.deleteDir();
     }
