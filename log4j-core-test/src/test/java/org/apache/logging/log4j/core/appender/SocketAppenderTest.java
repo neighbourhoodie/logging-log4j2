@@ -16,10 +16,10 @@
  */
 package org.apache.logging.log4j.core.appender;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,12 +52,11 @@ import org.apache.logging.log4j.core.net.Protocol;
 import org.apache.logging.log4j.core.test.AvailablePortFinder;
 import org.apache.logging.log4j.core.util.Constants;
 import org.apache.logging.log4j.core.util.Throwables;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -74,7 +73,7 @@ public class SocketAppenderTest {
     private final LoggerContext context = LoggerContext.getContext();
     private final Logger logger = context.getLogger(SocketAppenderTest.class.getName());
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() throws Exception {
         tcpServer = new TcpSocketTestServer(PORT);
         tcpServer.start();
@@ -84,14 +83,14 @@ public class SocketAppenderTest {
         ThreadContext.clearAll();
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanupClass() {
         tcpServer.shutdown();
         udpServer.shutdown();
         ThreadContext.clearAll();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         ThreadContext.clearAll();
         removeAndStopAppenders();
@@ -118,7 +117,7 @@ public class SocketAppenderTest {
     }
 
     @Test
-    @Ignore("WIP Bug when this method runs after testTcpAppender1()")
+    @Disabled("WIP Bug when this method runs after testTcpAppender1()")
     public void testTcpAppender2() throws Exception {
         testTcpAppender(tcpServer, logger, Constants.ENCODER_BYTE_BUFFER_SIZE);
     }
@@ -138,7 +137,7 @@ public class SocketAppenderTest {
                 .build();
         // @formatter:on
         appender.start();
-        Assert.assertEquals(bufferSize, appender.getManager().getByteBuffer().capacity());
+        assertEquals(bufferSize, appender.getManager().getByteBuffer().capacity());
 
         // set appender on root and set level to debug
         logger.addAppender(appender);
@@ -160,14 +159,14 @@ public class SocketAppenderTest {
         }
         Thread.sleep(250);
         LogEvent event = tcpTestServer.getQueue().poll(3, TimeUnit.SECONDS);
-        assertNotNull("No event retrieved", event);
-        assertTrue("Incorrect event", event.getMessage().getFormattedMessage().equals("This is a test message"));
-        assertTrue("Message not delivered via TCP", tcpTestServer.getCount() > 0);
+        assertNotNull(event, "No event retrieved");
+        assertTrue(event.getMessage().getFormattedMessage().equals("This is a test message"), "Incorrect event");
+        assertTrue(tcpTestServer.getCount() > 0, "Message not delivered via TCP");
         assertEquals(expectedUuidStr, event.getContextData().getValue(tcKey));
         event = tcpTestServer.getQueue().poll(3, TimeUnit.SECONDS);
-        assertNotNull("No event retrieved", event);
-        assertTrue("Incorrect event", event.getMessage().getFormattedMessage().equals("Throwing an exception"));
-        assertTrue("Message not delivered via TCP", tcpTestServer.getCount() > 1);
+        assertNotNull(event, "No event retrieved");
+        assertTrue(event.getMessage().getFormattedMessage().equals("Throwing an exception"), "Incorrect event");
+        assertTrue(tcpTestServer.getCount() > 1, "Message not delivered via TCP");
         assertEquals(expectedUuidStr, event.getContextStack().pop());
         assertNotNull(event.getThrownProxy());
         assertEquals(expectedExMsg, event.getThrownProxy().getMessage());
@@ -216,9 +215,9 @@ public class SocketAppenderTest {
         logger.setLevel(Level.DEBUG);
         logger.debug("This is a udp message");
         final LogEvent event = udpServer.getQueue().poll(3, TimeUnit.SECONDS);
-        assertNotNull("No event retrieved", event);
-        assertTrue("Incorrect event", event.getMessage().getFormattedMessage().equals("This is a udp message"));
-        assertTrue("Message not delivered via UDP", udpServer.getCount() > 0);
+        assertNotNull(event, "No event retrieved");
+        assertTrue(event.getMessage().getFormattedMessage().equals("This is a udp message"), "Incorrect event");
+        assertTrue(udpServer.getCount() > 0, "Message not delivered via UDP");
     }
 
     @Test
@@ -248,7 +247,7 @@ public class SocketAppenderTest {
             logger.debug("This message is written because a deadlock never.");
 
             final LogEvent event = tcpSocketServer.getQueue().poll(3, TimeUnit.SECONDS);
-            assertNotNull("No event retrieved", event);
+            assertNotNull(event, "No event retrieved");
         } finally {
             tcpSocketServer.shutdown();
         }

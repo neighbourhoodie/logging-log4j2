@@ -18,10 +18,9 @@ package org.apache.logging.log4j;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.core.jackson.Log4jXmlObjectMapper;
-import org.apache.logging.log4j.core.test.categories.Layouts;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
 
-@Category(Layouts.Xml.class)
+@Tag("Layouts.Xml")
 public class MarkerMixInXmlTest extends MarkerMixInTest {
 
     @Override

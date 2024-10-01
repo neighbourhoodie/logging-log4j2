@@ -16,41 +16,44 @@
  */
 package org.apache.logging.log4j.core.appender;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.appender.FailOnceAppender;
 import org.apache.logging.log4j.core.test.appender.ListAppender;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.apache.logging.log4j.core.test.junit.Named;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  */
+@LoggerContextSource("log4j-failover.xml")
 public class FailoverFailedPrimaryAppenderTest {
     private ListAppender app;
     private FailOnceAppender foApp;
     private Logger logger;
     private Logger onceLogger;
 
-    @ClassRule
-    public static LoggerContextRule init = new LoggerContextRule("log4j-failover.xml");
-
-    @Before
-    public void setUp() throws Exception {
-        app = init.getListAppender("List");
-        foApp = (FailOnceAppender) init.getAppender("Once");
+    @BeforeEach
+    public void setUp(
+            @Named("List") final ListAppender listAppender,
+            @Named("Once") final FailOnceAppender onceAppender,
+            LoggerContext init)
+            throws Exception {
+        this.app = listAppender;
+        this.foApp = onceAppender;
         logger = init.getLogger("LoggerTest");
         onceLogger = init.getLogger("Once");
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws Exception {
         if (app != null) {
             app.clear();
@@ -62,12 +65,12 @@ public class FailoverFailedPrimaryAppenderTest {
         logger.error("This is a test");
         List<LogEvent> events = app.getEvents();
         assertNotNull(events);
-        assertEquals("Incorrect number of events. Should be 1 is " + events.size(), events.size(), 1);
+        assertEquals(events.size(), 1, "Incorrect number of events. Should be 1 is " + events.size());
         app.clear();
         logger.error("This is a test");
         events = app.getEvents();
         assertNotNull(events);
-        assertEquals("Incorrect number of events. Should be 1 is " + events.size(), events.size(), 1);
+        assertEquals(events.size(), 1, "Incorrect number of events. Should be 1 is " + events.size());
     }
 
     @Test
@@ -76,14 +79,14 @@ public class FailoverFailedPrimaryAppenderTest {
         onceLogger.error("Fail again");
         List<LogEvent> events = app.getEvents();
         assertNotNull(events);
-        assertEquals("Incorrect number of events. Should be 2 is " + events.size(), events.size(), 2);
+        assertEquals(events.size(), 2, "Incorrect number of events. Should be 2 is " + events.size());
         app.clear();
         Thread.sleep(1100);
         onceLogger.error("Fail after recovery interval");
         onceLogger.error("Second log message");
         events = app.getEvents();
-        assertEquals("Did not recover", events.size(), 0);
+        assertEquals(events.size(), 0, "Did not recover");
         events = foApp.drainEvents();
-        assertEquals("Incorrect number of events in primary appender", events.size(), 2);
+        assertEquals(events.size(), 2, "Incorrect number of events in primary appender");
     }
 }

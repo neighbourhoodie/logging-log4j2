@@ -16,6 +16,9 @@
  */
 package org.apache.logging.log4j.core.appender;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -27,10 +30,9 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.filter.NoMarkerFilter;
 import org.apache.logging.log4j.core.layout.PatternLayout;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 /**
  * Tests {@link OutputStreamAppender}.
@@ -38,12 +40,15 @@ import org.junit.rules.TestName;
 public class OutputStreamAppenderTest {
 
     private static final String TEST_MSG = "FOO ERROR";
+    private String testName;
 
-    @Rule
-    public TestName testName = new TestName();
+    @BeforeEach
+    public void setup(TestInfo testInfo) {
+        testName = testInfo.getDisplayName();
+    }
 
     private String getName(final OutputStream out) {
-        return out.getClass().getSimpleName() + "." + testName.getMethodName();
+        return out.getClass().getSimpleName() + "." + testName;
     }
 
     /**
@@ -63,13 +68,11 @@ public class OutputStreamAppenderTest {
     @Test
     public void testBuildFilter() {
         final NoMarkerFilter filter = NoMarkerFilter.newBuilder().build();
-        // @formatter:off
         final OutputStreamAppender.Builder builder =
                 OutputStreamAppender.newBuilder().setName("test").setFilter(filter);
-        // @formatter:on
-        Assert.assertEquals(filter, builder.getFilter());
+        assertEquals(filter, builder.getFilter());
         final OutputStreamAppender appender = builder.build();
-        Assert.assertEquals(filter, appender.getFilter());
+        assertEquals(filter, appender.getFilter());
     }
 
     @Test
@@ -81,7 +84,7 @@ public class OutputStreamAppenderTest {
         addAppender(os, name);
         logger.error(TEST_MSG);
         final String actual = out.toString();
-        Assert.assertTrue(actual, actual.contains(TEST_MSG));
+        assertTrue(actual.contains(TEST_MSG), actual);
     }
 
     @Test
@@ -92,7 +95,7 @@ public class OutputStreamAppenderTest {
         addAppender(out, name);
         logger.error(TEST_MSG);
         final String actual = out.toString();
-        Assert.assertTrue(actual, actual.contains(TEST_MSG));
+        assertTrue(actual.contains(TEST_MSG), actual);
     }
 
     /**

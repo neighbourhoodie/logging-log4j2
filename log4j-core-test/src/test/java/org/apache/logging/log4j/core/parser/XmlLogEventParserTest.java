@@ -16,10 +16,12 @@
  */
 package org.apache.logging.log4j.core.parser;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.nio.charset.StandardCharsets;
 import org.apache.logging.log4j.core.LogEvent;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class XmlLogEventParserTest extends LogEventParserTest {
 
@@ -72,7 +74,7 @@ public class XmlLogEventParserTest extends LogEventParserTest {
                     + "  </Thrown>\n"
                     + "</Event>";
 
-    @Before
+    @BeforeEach
     public void setup() {
         parser = new XmlLogEventParser();
     }
@@ -83,14 +85,14 @@ public class XmlLogEventParserTest extends LogEventParserTest {
         assertLogEvent(logEvent);
     }
 
-    @Test(expected = ParseException.class)
+    @Test()
     public void testStringEmpty() throws ParseException {
-        parser.parseFrom("");
+        assertThrows(ParseException.class, () -> parser.parseFrom(""));
     }
 
-    @Test(expected = ParseException.class)
+    @Test()
     public void testStringInvalidXml() throws ParseException {
-        parser.parseFrom("foobar");
+        assertThrows(ParseException.class, () -> parser.parseFrom("foobar"));
     }
 
     @Test
@@ -98,9 +100,11 @@ public class XmlLogEventParserTest extends LogEventParserTest {
         parser.parseFrom("<Event></Event>");
     }
 
-    @Test(expected = ParseException.class)
+    @Test()
     public void testStringWrongPropertyType() throws ParseException {
-        parser.parseFrom("<Event><Instant epochSecond=\"bar\">foobar</Instant></Event>");
+        assertThrows(
+                ParseException.class,
+                () -> parser.parseFrom("<Event><Instant epochSecond=\"bar\">foobar</Instant></Event>"));
     }
 
     @Test

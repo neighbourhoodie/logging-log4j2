@@ -16,10 +16,12 @@
  */
 package org.apache.logging.log4j.core.parser;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.nio.charset.StandardCharsets;
 import org.apache.logging.log4j.core.LogEvent;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class JsonLogEventParserTest extends LogEventParserTest {
 
@@ -71,7 +73,7 @@ public class JsonLogEventParserTest extends LogEventParserTest {
             + "  }\n"
             + "}";
 
-    @Before
+    @BeforeEach
     public void setup() {
         parser = new JsonLogEventParser();
     }
@@ -82,19 +84,19 @@ public class JsonLogEventParserTest extends LogEventParserTest {
         assertLogEvent(logEvent);
     }
 
-    @Test(expected = ParseException.class)
+    @Test()
     public void testStringEmpty() throws ParseException {
-        parser.parseFrom("");
+        assertThrows(ParseException.class, () -> parser.parseFrom(""));
     }
 
-    @Test(expected = ParseException.class)
+    @Test()
     public void testStringInvalidJson() throws ParseException {
-        parser.parseFrom("foobar");
+        assertThrows(ParseException.class, () -> parser.parseFrom("foobar"));
     }
 
-    @Test(expected = ParseException.class)
+    @Test()
     public void testStringJsonArray() throws ParseException {
-        parser.parseFrom("[]");
+        assertThrows(ParseException.class, () -> parser.parseFrom("[]"));
     }
 
     @Test
@@ -102,9 +104,9 @@ public class JsonLogEventParserTest extends LogEventParserTest {
         parser.parseFrom("{}");
     }
 
-    @Test(expected = ParseException.class)
+    @Test()
     public void testStringWrongPropertyType() throws ParseException {
-        parser.parseFrom("{\"threadId\":\"foobar\"}");
+        assertThrows(ParseException.class, () -> parser.parseFrom("{\"threadId\":\"foobar\"}"));
     }
 
     @Test
