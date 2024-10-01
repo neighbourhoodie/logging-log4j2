@@ -63,7 +63,7 @@ public class AsyncLoggerLocationTest {
         final String line1 = reader.readLine();
         reader.close();
         file.delete();
-        assertNotNull("line1", line1);
+        assertNotNull(line1, "line1");
         assertTrue(line1.contains(msg), "line1 correct");
 
         final String location = "testAsyncLogWritesToLog";
