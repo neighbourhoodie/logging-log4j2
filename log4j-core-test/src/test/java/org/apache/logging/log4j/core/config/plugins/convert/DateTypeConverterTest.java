@@ -21,39 +21,29 @@ import static org.junit.Assert.assertEquals;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  *
  */
-@RunWith(Parameterized.class)
 public class DateTypeConverterTest {
 
-    private final Class<? extends Date> dateClass;
-    private final long timestamp;
-    private final Object expected;
-
-    @Parameterized.Parameters
-    public static Object[][] data() {
+    static Stream<Arguments> data() {
         final long millis = System.currentTimeMillis();
-        return new Object[][] {
-            {Date.class, millis, new Date(millis)},
-            {java.sql.Date.class, millis, new java.sql.Date(millis)},
-            {Time.class, millis, new Time(millis)},
-            {Timestamp.class, millis, new Timestamp(millis)}
-        };
+        return Stream.of(
+                Arguments.of(Date.class, millis, new Date(millis)),
+                Arguments.of(java.sql.Date.class, millis, new java.sql.Date(millis)),
+                Arguments.of(Time.class, millis, new Time(millis)),
+                Arguments.of(Timestamp.class, millis, new Timestamp(millis)));
     }
 
-    public DateTypeConverterTest(final Class<? extends Date> dateClass, final long timestamp, final Object expected) {
-        this.dateClass = dateClass;
-        this.timestamp = timestamp;
-        this.expected = expected;
-    }
-
-    @Test
-    public void testFromMillis() throws Exception {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testFromMillis(final Class<? extends Date> dateClass, final long timestamp, final Object expected)
+            throws Exception {
         assertEquals(expected, DateTypeConverter.fromMillis(timestamp, dateClass));
     }
 }

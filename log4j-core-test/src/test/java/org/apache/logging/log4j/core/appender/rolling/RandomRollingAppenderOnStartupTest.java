@@ -16,57 +16,36 @@
  */
 package org.apache.logging.log4j.core.appender.rolling;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  *
  */
-@RunWith(Parameterized.class)
+@LoggerContextSource
 public class RandomRollingAppenderOnStartupTest {
 
     private static final String DIR = "target/onStartup";
 
-    private Logger logger;
-
-    @Parameterized.Parameters(name = "{0} \u2192 {1}")
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] { //
-            // @formatter:off
-            {"log4j-test5.xml"}, {"log4j-test5.xml"},
-        });
-        // @formatter:on
+    public static Stream<Arguments> data() {
+        return Stream.of(Arguments.of("log4j-test5.xml"), Arguments.of("log4j-test5.xml"));
     }
 
-    @Rule
-    public LoggerContextRule loggerContextRule;
-
-    public RandomRollingAppenderOnStartupTest(final String configFile) {
-        this.loggerContextRule = LoggerContextRule.createShutdownTimeoutLoggerContextRule(configFile);
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        this.logger = this.loggerContextRule.getLogger(RandomRollingAppenderOnStartupTest.class.getName());
-    }
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @BeforeAll
+    public static void beforeAll() throws Exception {
         if (Files.exists(Paths.get("target/onStartup"))) {
             try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
                 for (final Path path : directoryStream) {
@@ -77,27 +56,33 @@ public class RandomRollingAppenderOnStartupTest {
         }
     }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
+    @AfterAll
+    public static void afterAll() throws Exception {
         long size = 0;
-        try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
-            for (final Path path : directoryStream) {
-                if (size == 0) {
-                    size = Files.size(path);
-                } else {
-                    final long fileSize = Files.size(path);
-                    assertTrue(
-                            "Expected size: " + size + " Size of " + path.getFileName() + ": " + fileSize,
-                            size == fileSize);
+        if (Files.exists(Paths.get(DIR))) {
+            try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
+                for (final Path path : directoryStream) {
+                    if (size == 0) {
+                        size = Files.size(path);
+                    } else {
+                        final long fileSize = Files.size(path);
+                        assertTrue(
+                                size == fileSize,
+                                "Expected size: " + size + " Size of " + path.getFileName() + ": " + fileSize);
+                    }
+                    Files.delete(path);
                 }
-                Files.delete(path);
+                Files.delete(Paths.get(DIR));
             }
-            Files.delete(Paths.get(DIR));
         }
     }
 
-    @Test
-    public void testAppender() throws Exception {
+    @ParameterizedTest(name = "{0} \u2192 {1}")
+    @MethodSource("data")
+    public void testAppender(String configFile) throws Exception {
+        LoggerContext loggerContext = new LoggerContext(configFile);
+        Logger logger = loggerContext.getLogger(RandomRollingAppenderOnStartupTest.class.getName());
+
         for (int i = 0; i < 100; ++i) {
             logger.debug("This is test message number " + i);
         }

@@ -14,19 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.logging.log4j.core.async;
+package org.apache.logging.log4j.core.test.junit;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachCallback {
 
-@Tag("AsyncLoggers")
-public class AsyncLoggerContextSelectorInitialStateTest {
+    private final String DIR;
 
-    @Test
-    public void testLoggerContextsListInitiallyEmpty() {
-        final AsyncLoggerContextSelector selector = new AsyncLoggerContextSelector();
-        assertTrue(selector.getLoggerContexts().isEmpty());
+    public CleanFoldersRuleExtension(final String DIR) {
+        this.DIR = DIR;
+    }
+
+    public void beforeEach(ExtensionContext ctx) {
+        new CleanFolders(DIR);
+    }
+
+    public void afterEach(ExtensionContext ctx) {
+        new CleanFolders(DIR);
     }
 }

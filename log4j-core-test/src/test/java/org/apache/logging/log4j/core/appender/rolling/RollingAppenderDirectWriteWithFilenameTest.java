@@ -16,41 +16,38 @@
  */
 package org.apache.logging.log4j.core.appender.rolling;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.File;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  */
+@LoggerContextSource(value = "log4j2-rolling-1833.xml", timeout = 10)
 public class RollingAppenderDirectWriteWithFilenameTest {
-
-    private static final String CONFIG = "log4j2-rolling-1833.xml";
 
     private static final String DIR = "target/rolling-1833";
 
-    public static LoggerContextRule loggerContextRule =
-            LoggerContextRule.createShutdownTimeoutLoggerContextRule(CONFIG);
-
-    @Rule
-    public RuleChain chain = loggerContextRule.withCleanFoldersRule(DIR);
-
     private Logger logger;
 
-    @Before
-    public void setUp() throws Exception {
+    @RegisterExtension
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+
+    @BeforeEach
+    public void setUp(final LoggerContext loggerContextRule) throws Exception {
         this.logger = loggerContextRule.getLogger(RollingAppenderDirectWriteWithFilenameTest.class.getName());
     }
 
     @Test
-    public void testAppender() throws Exception {
+    public void testAppender(LoggerContext context) throws Exception {
         final File dir = new File(DIR);
-        assertFalse("Directory created", dir.exists());
+        assertFalse(dir.exists(), "Directory created");
     }
 }

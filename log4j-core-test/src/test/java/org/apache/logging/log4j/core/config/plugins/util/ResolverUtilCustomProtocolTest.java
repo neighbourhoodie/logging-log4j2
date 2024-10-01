@@ -16,8 +16,8 @@
  */
 package org.apache.logging.log4j.core.config.plugins.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +91,7 @@ public class ResolverUtilCustomProtocolTest {
                 oldFactory = (URLStreamHandlerFactory) factoryField.get(null);
             }
         }
-        assertThat(factoryField).as("java.net.URL#factory field").isNotNull();
+        assertNotNull(factoryField, "java.net.URL#factory field is null");
         URL.setURLStreamHandlerFactory(new NoopURLStreamHandlerFactory());
     }
 
@@ -174,7 +174,7 @@ public class ResolverUtilCustomProtocolTest {
     @MethodSource
     public void testExtractedPath(final String urlAsString, final String expected) throws Exception {
         final URL url = new URL(urlAsString);
-        assertThat(new ResolverUtil().extractPath(url)).isEqualTo(expected);
+        assertEquals(new ResolverUtil().extractPath(url), expected);
     }
 
     @Test
@@ -184,12 +184,11 @@ public class ResolverUtilCustomProtocolTest {
             final ResolverUtil resolverUtil = new ResolverUtil();
             resolverUtil.setClassLoader(new SingleURLClassLoader(new URL("vfs:/" + tmpDir + "/customplugin3/"), cl));
             resolverUtil.findInPackage(new PluginTest(), "customplugin3");
+            assertEquals(1, resolverUtil.getClasses().size(), "Class not found in packages");
             assertEquals(
-                    "Class not found in packages", 1, resolverUtil.getClasses().size());
-            assertEquals(
-                    "Unexpected class resolved",
                     cl.loadClass("customplugin3.FixedString3Layout"),
-                    resolverUtil.getClasses().iterator().next());
+                    resolverUtil.getClasses().iterator().next(),
+                    "Unexpected class resolved");
         }
     }
 
@@ -201,12 +200,11 @@ public class ResolverUtilCustomProtocolTest {
             resolverUtil.setClassLoader(
                     new SingleURLClassLoader(new URL("vfs:/" + tmpDir + "/customplugin4.jar/customplugin4/"), cl));
             resolverUtil.findInPackage(new PluginTest(), "customplugin4");
+            assertEquals(1, resolverUtil.getClasses().size(), "Class not found in packages");
             assertEquals(
-                    "Class not found in packages", 1, resolverUtil.getClasses().size());
-            assertEquals(
-                    "Unexpected class resolved",
                     cl.loadClass("customplugin4.FixedString4Layout"),
-                    resolverUtil.getClasses().iterator().next());
+                    resolverUtil.getClasses().iterator().next(),
+                    "Unexpected class resolved");
         }
     }
 }

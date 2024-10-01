@@ -16,6 +16,9 @@
  */
 package org.apache.logging.log4j.core.jackson;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,13 +31,11 @@ import com.fasterxml.jackson.databind.deser.std.StdScalarDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.util.ClassUtil;
 import java.io.IOException;
-import org.apache.logging.log4j.core.test.categories.Layouts;
 import org.apache.logging.log4j.util.Strings;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(Layouts.Json.class)
+@Tag("Layouts.Json")
 public class JacksonIssue429MyNamesTest {
 
     @SuppressWarnings("serial")
@@ -114,9 +115,9 @@ public class JacksonIssue429MyNamesTest {
                 aposToQuotes(
                         "{'Location':{'class':'package.SomeClass','method':'someMethod','file':'SomeClass.java','line':13}}"),
                 StackTraceBean.class);
-        Assert.assertNotNull(bean);
-        Assert.assertNotNull(bean.location);
-        Assert.assertEquals(StackTraceBean.NUM, bean.location.getLineNumber());
+        assertNotNull(bean);
+        assertNotNull(bean.location);
+        assertEquals(StackTraceBean.NUM, bean.location.getLineNumber());
 
         // and then directly, iff registered
         final ObjectMapper mapper = new ObjectMapper();
@@ -127,7 +128,7 @@ public class JacksonIssue429MyNamesTest {
         final StackTraceElement elem = mapper.readValue(
                 aposToQuotes("{'class':'package.SomeClass','method':'someMethod','file':'SomeClass.java','line':13}"),
                 StackTraceElement.class);
-        Assert.assertNotNull(elem);
-        Assert.assertEquals(StackTraceBean.NUM, elem.getLineNumber());
+        assertNotNull(elem);
+        assertEquals(StackTraceBean.NUM, elem.getLineNumber());
     }
 }

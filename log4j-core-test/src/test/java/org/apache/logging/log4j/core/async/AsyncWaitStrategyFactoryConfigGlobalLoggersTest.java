@@ -23,31 +23,30 @@ import com.lmax.disruptor.YieldingWaitStrategy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
-import org.apache.logging.log4j.core.test.categories.AsyncLoggers;
 import org.apache.logging.log4j.core.util.Constants;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(AsyncLoggers.class)
+@Tag("AsyncLoggers")
 public class AsyncWaitStrategyFactoryConfigGlobalLoggersTest {
 
-    @BeforeClass
-    public static void beforeClass() {
+    @BeforeAll
+    public static void beforeAll() {
         System.setProperty(Constants.LOG4J_CONTEXT_SELECTOR, AsyncLoggerContextSelector.class.getName());
         System.setProperty(
                 ConfigurationFactory.CONFIGURATION_FILE_PROPERTY, "AsyncWaitStrategyFactoryConfigGlobalLoggerTest.xml");
     }
 
-    @AfterClass
-    public static void afterClass() {
+    @AfterAll
+    public static void afterAll() {
         System.clearProperty(Constants.LOG4J_CONTEXT_SELECTOR);
         System.clearProperty(ConfigurationFactory.CONFIGURATION_FILE_PROPERTY);
     }
 
-    @Ignore("This test succeeds when run individually but fails when run by Surefire with all other tests")
+    @Disabled("This test succeeds when run individually but fails when run by Surefire with all other tests")
     @Test
     public void testConfigWaitStrategyAndFactory() throws Exception {
         final AsyncLogger logger = (AsyncLogger) LogManager.getLogger("com.foo.Bar");

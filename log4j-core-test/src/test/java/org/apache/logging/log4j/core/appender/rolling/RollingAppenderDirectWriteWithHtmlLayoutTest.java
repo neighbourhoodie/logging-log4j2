@@ -18,12 +18,12 @@ package org.apache.logging.log4j.core.appender.rolling;
 
 import static org.apache.logging.log4j.core.test.hamcrest.Descriptors.that;
 import static org.apache.logging.log4j.core.test.hamcrest.FileMatchers.hasName;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.hasItemInArray;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,17 +31,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.layout.HtmlLayout;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.util.IOUtils;
 import org.apache.logging.log4j.message.SimpleMessage;
 import org.hamcrest.Matchers;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests for LOG4J2-2760
@@ -50,24 +49,21 @@ public class RollingAppenderDirectWriteWithHtmlLayoutTest {
 
     private static final String DIR = "target/rolling-direct-htmlLayout";
 
-    public static LoggerContextRule loggerContextRule = new LoggerContextRule();
-
-    @Rule
-    public RuleChain chain = loggerContextRule.withCleanFoldersRule(DIR);
-
     @Test
+    @LoggerContextSource(DIR)
     public void testRollingFileAppenderWithHtmlLayout() throws Exception {
         checkAppenderWithHtmlLayout(true);
     }
 
     @Test
+    @LoggerContextSource(DIR)
     public void testRollingFileAppenderWithHtmlLayoutNoAppend() throws Exception {
         checkAppenderWithHtmlLayout(false);
     }
 
     private void checkAppenderWithHtmlLayout(final boolean append) throws InterruptedException, IOException {
         final String prefix = "testHtml_" + (append ? "append_" : "noAppend_");
-        final Configuration config = loggerContextRule.getConfiguration();
+        final Configuration config = LoggerContext.getContext().getConfiguration();
         final RollingFileAppender appender = RollingFileAppender.newBuilder()
                 .setName("RollingHtml")
                 .withFilePattern(DIR + "/" + prefix + "_-%d{MM-dd-yy-HH-mm}-%i.html")
@@ -91,7 +87,7 @@ public class RollingAppenderDirectWriteWithHtmlLayoutTest {
             stopped = true;
             Thread.sleep(50);
             final File dir = new File(DIR);
-            assertTrue("Directory not created", dir.exists());
+            assertTrue(dir.exists(), "Directory not created");
             final File[] files = dir.listFiles();
             assertNotNull(files);
             assertThat(files, hasItemInArray(that(hasName(that(endsWith(".html"))))));
@@ -113,7 +109,7 @@ public class RollingAppenderDirectWriteWithHtmlLayoutTest {
                     }
                 }
             }
-            assertEquals("Incorrect number of events read.", count, foundEvents);
+            assertEquals(count, foundEvents, "Incorrect number of events read.");
         } finally {
             if (!stopped) {
                 appender.stop();

@@ -16,16 +16,20 @@
  */
 package org.apache.logging.log4j.core.appender.rolling;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.test.junit.CleanFolders;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.apache.logging.log4j.core.test.junit.Named;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test LOG4J2-2485.
@@ -40,14 +44,8 @@ public class RollingAppenderDirectWriteStartupSizeTest {
 
     private static final String MESSAGE = "test message";
 
-    @Rule
-    public LoggerContextRule loggerContextRule = LoggerContextRule.createShutdownTimeoutLoggerContextRule(CONFIG);
-
-    @Rule
-    public CleanFolders cleanFolders = new CleanFolders(false, true, 10, DIR);
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @BeforeAll
+    public static void beforeAll() throws Exception {
         final Path log = Paths.get(DIR, FILE);
         if (Files.exists(log)) {
             Files.delete(log);
@@ -58,13 +56,25 @@ public class RollingAppenderDirectWriteStartupSizeTest {
         Files.write(log, MESSAGE.getBytes());
     }
 
+    @BeforeEach
+    @LoggerContextSource(value = CONFIG, timeout = 10)
+    public void setUp() throws Exception {
+        new CleanFolders(false, true, 10, DIR);
+    }
+
+    @AfterEach
+    @LoggerContextSource(value = CONFIG, timeout = 10)
+    public void teardown() throws Exception {
+        new CleanFolders(false, true, 10, DIR);
+    }
+
     @Test
-    public void testRollingFileAppenderWithReconfigure() throws Exception {
-        final RollingFileAppender rfAppender =
-                loggerContextRule.getRequiredAppender("RollingFile", RollingFileAppender.class);
+    @LoggerContextSource(value = CONFIG, timeout = 10)
+    public void testRollingFileAppenderWithReconfigure(@Named("RollingFile") RollingFileAppender rfAppender)
+            throws Exception {
         final RollingFileManager manager = rfAppender.getManager();
 
-        Assert.assertNotNull(manager);
-        Assert.assertEquals("Existing file size not preserved on startup", MESSAGE.getBytes().length, manager.size);
+        assertNotNull(manager);
+        assertEquals(MESSAGE.getBytes().length, manager.size, "Existing file size not preserved on startup");
     }
 }
