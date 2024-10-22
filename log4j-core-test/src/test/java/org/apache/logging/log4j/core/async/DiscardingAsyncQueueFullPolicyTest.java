@@ -16,18 +16,18 @@
  */
 package org.apache.logging.log4j.core.async;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.test.categories.AsyncLoggers;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the DiscardingAsyncQueueFullPolicy class..
  */
-@Category(AsyncLoggers.class)
+@Tag("AsyncLoggers")
 public class DiscardingAsyncQueueFullPolicyTest {
 
     private static long currentThreadId() {
@@ -38,9 +38,11 @@ public class DiscardingAsyncQueueFullPolicyTest {
         return -1;
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testConstructorDisallowsNullThresholdLevel() {
-        new DiscardingAsyncQueueFullPolicy(null);
+        assertThrows(NullPointerException.class, () -> {
+            new DiscardingAsyncQueueFullPolicy(null);
+        });
     }
 
     @Test
@@ -56,10 +58,10 @@ public class DiscardingAsyncQueueFullPolicyTest {
         final DiscardingAsyncQueueFullPolicy router = new DiscardingAsyncQueueFullPolicy(Level.WARN);
 
         for (final Level level : new Level[] {Level.WARN, Level.INFO, Level.DEBUG, Level.TRACE, Level.ALL}) {
-            assertEquals(level.name(), EventRoute.DISCARD, router.getRoute(currentThreadId(), level));
-            assertEquals(level.name(), EventRoute.DISCARD, router.getRoute(otherThreadId(), level));
-            assertEquals(level.name(), EventRoute.DISCARD, router.getRoute(currentThreadId(), level));
-            assertEquals(level.name(), EventRoute.DISCARD, router.getRoute(otherThreadId(), level));
+            assertEquals(EventRoute.DISCARD, router.getRoute(currentThreadId(), level), level.name());
+            assertEquals(EventRoute.DISCARD, router.getRoute(otherThreadId(), level), level.name());
+            assertEquals(EventRoute.DISCARD, router.getRoute(currentThreadId(), level), level.name());
+            assertEquals(EventRoute.DISCARD, router.getRoute(otherThreadId(), level), level.name());
         }
     }
 
@@ -68,8 +70,8 @@ public class DiscardingAsyncQueueFullPolicyTest {
         final DiscardingAsyncQueueFullPolicy router = new DiscardingAsyncQueueFullPolicy(Level.WARN);
 
         for (final Level level : new Level[] {Level.WARN, Level.INFO, Level.DEBUG, Level.TRACE, Level.ALL}) {
-            assertEquals(level.name(), EventRoute.DISCARD, router.getRoute(currentThreadId(), level));
-            assertEquals(level.name(), EventRoute.DISCARD, router.getRoute(otherThreadId(), level));
+            assertEquals(EventRoute.DISCARD, router.getRoute(currentThreadId(), level), level.name());
+            assertEquals(EventRoute.DISCARD, router.getRoute(otherThreadId(), level), level.name());
         }
     }
 
@@ -78,10 +80,10 @@ public class DiscardingAsyncQueueFullPolicyTest {
         final DiscardingAsyncQueueFullPolicy router = new DiscardingAsyncQueueFullPolicy(Level.WARN);
 
         for (final Level level : new Level[] {Level.ERROR, Level.FATAL, Level.OFF}) {
-            assertEquals(level.name(), EventRoute.SYNCHRONOUS, router.getRoute(currentThreadId(), level));
-            assertEquals(level.name(), EventRoute.ENQUEUE, router.getRoute(otherThreadId(), level));
-            assertEquals(level.name(), EventRoute.SYNCHRONOUS, router.getRoute(currentThreadId(), level));
-            assertEquals(level.name(), EventRoute.ENQUEUE, router.getRoute(otherThreadId(), level));
+            assertEquals(EventRoute.SYNCHRONOUS, router.getRoute(currentThreadId(), level), level.name());
+            assertEquals(EventRoute.ENQUEUE, router.getRoute(otherThreadId(), level), level.name());
+            assertEquals(EventRoute.SYNCHRONOUS, router.getRoute(currentThreadId(), level), level.name());
+            assertEquals(EventRoute.ENQUEUE, router.getRoute(otherThreadId(), level), level.name());
         }
     }
 
@@ -90,7 +92,7 @@ public class DiscardingAsyncQueueFullPolicyTest {
         final DiscardingAsyncQueueFullPolicy router = new DiscardingAsyncQueueFullPolicy(Level.WARN);
 
         for (final Level level : new Level[] {Level.ERROR, Level.FATAL, Level.OFF}) {
-            assertEquals(level.name(), EventRoute.ENQUEUE, router.getRoute(otherThreadId(), level));
+            assertEquals(EventRoute.ENQUEUE, router.getRoute(otherThreadId(), level), level.name());
         }
     }
 
@@ -99,22 +101,22 @@ public class DiscardingAsyncQueueFullPolicyTest {
         final DiscardingAsyncQueueFullPolicy router = new DiscardingAsyncQueueFullPolicy(Level.WARN);
 
         for (final Level level : new Level[] {Level.ERROR, Level.FATAL, Level.OFF}) {
-            assertEquals(level.name(), EventRoute.SYNCHRONOUS, router.getRoute(currentThreadId(), level));
+            assertEquals(EventRoute.SYNCHRONOUS, router.getRoute(currentThreadId(), level), level.name());
         }
     }
 
     @Test
     public void testGetDiscardCount() throws Exception {
         final DiscardingAsyncQueueFullPolicy router = new DiscardingAsyncQueueFullPolicy(Level.INFO);
-        assertEquals("initially", 0, DiscardingAsyncQueueFullPolicy.getDiscardCount(router));
+        assertEquals(0, DiscardingAsyncQueueFullPolicy.getDiscardCount(router), "initially");
 
         assertEquals(EventRoute.DISCARD, router.getRoute(-1L, Level.INFO));
-        assertEquals("increase", 1, DiscardingAsyncQueueFullPolicy.getDiscardCount(router));
+        assertEquals(1, DiscardingAsyncQueueFullPolicy.getDiscardCount(router), "increase");
 
         assertEquals(EventRoute.DISCARD, router.getRoute(-1L, Level.INFO));
-        assertEquals("increase", 2, DiscardingAsyncQueueFullPolicy.getDiscardCount(router));
+        assertEquals(2, DiscardingAsyncQueueFullPolicy.getDiscardCount(router), "increase");
 
         assertEquals(EventRoute.DISCARD, router.getRoute(-1L, Level.INFO));
-        assertEquals("increase", 3, DiscardingAsyncQueueFullPolicy.getDiscardCount(router));
+        assertEquals(3, DiscardingAsyncQueueFullPolicy.getDiscardCount(router), "increase");
     }
 }
