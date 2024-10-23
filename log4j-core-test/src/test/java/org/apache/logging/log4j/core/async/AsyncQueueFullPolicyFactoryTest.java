@@ -17,23 +17,22 @@
 package org.apache.logging.log4j.core.async;
 
 import static org.apache.logging.log4j.util.Strings.toRootLowerCase;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.core.test.categories.AsyncLoggers;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the AsyncQueueFullPolicyFactory class.
  */
-@Category(AsyncLoggers.class)
+@Tag("AsyncLoggers")
 public class AsyncQueueFullPolicyFactoryTest {
 
-    @Before
-    @After
+    @BeforeEach
+    @AfterEach
     public void resetProperties() throws Exception {
         System.clearProperty(AsyncQueueFullPolicyFactory.PROPERTY_NAME_ASYNC_EVENT_ROUTER);
         System.clearProperty(AsyncQueueFullPolicyFactory.PROPERTY_NAME_DISCARDING_THRESHOLD_LEVEL);

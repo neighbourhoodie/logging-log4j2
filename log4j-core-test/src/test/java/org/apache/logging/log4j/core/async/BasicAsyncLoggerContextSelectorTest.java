@@ -16,33 +16,32 @@
  */
 package org.apache.logging.log4j.core.async;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LifeCycle;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.test.categories.AsyncLoggers;
 import org.apache.logging.log4j.core.util.Constants;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Category(AsyncLoggers.class)
+@Tag("AsyncLoggers")
 public class BasicAsyncLoggerContextSelectorTest {
 
     private static final String FQCN = BasicAsyncLoggerContextSelectorTest.class.getName();
 
-    @BeforeClass
-    public static void beforeClass() {
+    @BeforeAll
+    public static void beforeAll() {
         System.setProperty(Constants.LOG4J_CONTEXT_SELECTOR, BasicAsyncLoggerContextSelector.class.getName());
     }
 
-    @AfterClass
-    public static void afterClass() {
+    @AfterAll
+    public static void afterAll() {
         System.clearProperty(Constants.LOG4J_CONTEXT_SELECTOR);
     }
 
