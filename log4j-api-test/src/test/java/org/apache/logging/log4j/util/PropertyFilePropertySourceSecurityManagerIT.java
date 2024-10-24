@@ -24,11 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Permission;
 import java.util.PropertyPermission;
-import org.apache.logging.log4j.test.junit.SecurityManagerTestRule;
+import org.apache.logging.log4j.test.junit.SecurityManagerExtension;
 import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Test related to https://issues.apache.org/jira/browse/LOG4J2-2274.
@@ -51,8 +51,8 @@ public class PropertyFilePropertySourceSecurityManagerIT {
         assertTrue(TEST_FIXTURE_PATH, Files.exists(Paths.get(TEST_FIXTURE_PATH)));
     }
 
-    @Rule
-    public final SecurityManagerTestRule rule = new SecurityManagerTestRule(new TestSecurityManager());
+    @RegisterExtension
+    public final SecurityManagerExtension ext = new SecurityManagerExtension(new TestSecurityManager());
 
     private static final String TEST_FIXTURE_PATH = "src/test/resources/PropertiesUtilTest.properties";
 
