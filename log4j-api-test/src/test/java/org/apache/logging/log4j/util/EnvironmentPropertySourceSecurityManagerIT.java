@@ -17,10 +17,10 @@
 package org.apache.logging.log4j.util;
 
 import java.security.Permission;
-import org.apache.logging.log4j.test.junit.SecurityManagerTestRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.apache.logging.log4j.test.junit.SecurityManagerExtension;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests https://issues.apache.org/jira/browse/LOG4J2-2274.
@@ -37,8 +37,8 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 @ResourceLock("java.lang.SecurityManager")
 public class EnvironmentPropertySourceSecurityManagerIT {
 
-    @Rule
-    public final SecurityManagerTestRule rule = new SecurityManagerTestRule(new TestSecurityManager());
+    @RegisterExtension
+    public final SecurityManagerExtension ext = new SecurityManagerExtension(new TestSecurityManager());
 
     /**
      * Always throws a SecurityException for any environment variables permission
