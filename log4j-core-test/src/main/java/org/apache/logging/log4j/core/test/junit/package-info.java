@@ -20,8 +20,8 @@
  * @see org.junit.rules.TestRule
  */
 @Export
-@Version("2.23.1")
-@BaselineIgnore("2.25.0")
+@Version("2.24.1")
+@BaselineIgnore("2.24.1")
 package org.apache.logging.log4j.core.test.junit;
 
 import aQute.bnd.annotation.baseline.BaselineIgnore;
