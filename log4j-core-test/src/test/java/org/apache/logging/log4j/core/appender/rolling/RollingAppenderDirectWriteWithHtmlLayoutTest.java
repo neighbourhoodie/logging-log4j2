@@ -36,34 +36,45 @@ import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.layout.HtmlLayout;
+import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.util.IOUtils;
 import org.apache.logging.log4j.message.SimpleMessage;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests for LOG4J2-2760
  */
+@LoggerContextSource(timeout = 10)
 public class RollingAppenderDirectWriteWithHtmlLayoutTest {
 
     private static final String DIR = "target/rolling-direct-htmlLayout";
 
+    @RegisterExtension
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+
+    private Configuration config;
+
+    @BeforeEach
+    public void setUp(final LoggerContext loggerContextRule) throws Exception {
+        this.config = loggerContextRule.getConfiguration();
+    }
+
     @Test
-    @LoggerContextSource(DIR)
     public void testRollingFileAppenderWithHtmlLayout() throws Exception {
         checkAppenderWithHtmlLayout(true);
     }
 
     @Test
-    @LoggerContextSource(DIR)
     public void testRollingFileAppenderWithHtmlLayoutNoAppend() throws Exception {
         checkAppenderWithHtmlLayout(false);
     }
 
     private void checkAppenderWithHtmlLayout(final boolean append) throws InterruptedException, IOException {
         final String prefix = "testHtml_" + (append ? "append_" : "noAppend_");
-        final Configuration config = LoggerContext.getContext().getConfiguration();
         final RollingFileAppender appender = RollingFileAppender.newBuilder()
                 .setName("RollingHtml")
                 .withFilePattern(DIR + "/" + prefix + "_-%d{MM-dd-yy-HH-mm}-%i.html")
