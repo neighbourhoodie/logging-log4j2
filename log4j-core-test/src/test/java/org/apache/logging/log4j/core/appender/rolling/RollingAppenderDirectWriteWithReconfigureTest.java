@@ -26,13 +26,17 @@ import java.io.File;
 import java.net.URI;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  */
+@LoggerContextSource(value = "log4j-rolling-direct-reconfigure.xml", timeout = 10)
 public class RollingAppenderDirectWriteWithReconfigureTest {
 
     private static final String CONFIG = "log4j-rolling-direct-reconfigure.xml";
@@ -41,21 +45,22 @@ public class RollingAppenderDirectWriteWithReconfigureTest {
 
     private static final int MAX_TRIES = 10;
 
+    @RegisterExtension
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+
     private Logger logger;
 
     @BeforeEach
-    @LoggerContextSource(value = CONFIG, timeout = 10)
-    public void setUp(LoggerContext context) {
-        this.logger = context.getLogger(RollingAppenderDirectWriteWithReconfigureTest.class.getName());
+    public void setUp(final LoggerContext loggerContextRule) {
+        this.logger = loggerContextRule.getLogger(RollingAppenderDirectWriteWithReconfigureTest.class.getName());
     }
 
     @Test
-    @LoggerContextSource(value = CONFIG, timeout = 10)
-    public void testRollingFileAppenderWithReconfigure(LoggerContext context) throws Exception {
+    public void testRollingFileAppenderWithReconfigure(final LoggerContext context) throws Exception {
         logger.debug("Before reconfigure");
 
         @SuppressWarnings("resource") // managed by the rule.
-        final LoggerContext config = context.getConfiguration().getLoggerContext();
+        final Configuration config = context.getConfiguration();
         context.setConfigLocation(new URI(CONFIG));
         context.reconfigure();
         logger.debug("Force a rollover");
