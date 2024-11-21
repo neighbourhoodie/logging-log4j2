@@ -33,24 +33,29 @@ import java.util.List;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.util.datetime.FixedDateFormat;
 import org.apache.logging.log4j.core.util.datetime.FixedDateFormat.FixedFormat;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests that sibling conditions are invoked in configured order.
  * This does not work for properties configurations. Use nested conditions instead.
  */
-@LoggerContextSource(value = "log4j-rolling-with-custom-delete-accum-count1.xml", timeout = 10)
 public class RollingAppenderDeleteAccumulatedCount1Test {
+    private static final String CONFIG = "log4j-rolling-with-custom-delete-accum-count1.xml";
     private static final String DIR = "target/rolling-with-delete-accum-count1/test";
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     @Test
+    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         final Path p1 = writeTextTo(DIR + "/my-1.log"); // glob="test-*.log"
         final Path p2 = writeTextTo(DIR + "/my-2.log");

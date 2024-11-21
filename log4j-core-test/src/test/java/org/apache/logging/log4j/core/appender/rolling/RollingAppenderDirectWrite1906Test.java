@@ -34,21 +34,21 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.status.StatusData;
 import org.apache.logging.log4j.status.StatusListener;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  */
-@LoggerContextSource(value = "log4j-rolling-direct-1906.xml", timeout = 10)
 public class RollingAppenderDirectWrite1906Test {
 
+    private static final String CONFIG = "log4j-rolling-direct-1906.xml";
     private static final String DIR = "target/rolling-direct-1906";
 
     private Logger logger;
@@ -59,7 +59,11 @@ public class RollingAppenderDirectWrite1906Test {
     }
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     @BeforeEach
     public void setUp(final LoggerContext loggerContextRule) throws Exception {
@@ -67,6 +71,7 @@ public class RollingAppenderDirectWrite1906Test {
     }
 
     @Test
+    @Timeout(10)
     public void testAppender() throws Exception {
         final int count = 100;
         for (int i = 0; i < count; ++i) {

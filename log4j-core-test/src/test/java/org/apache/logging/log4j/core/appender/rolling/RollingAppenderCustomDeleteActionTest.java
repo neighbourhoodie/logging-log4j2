@@ -25,22 +25,27 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  */
-@LoggerContextSource(value = "log4j-rolling-with-custom-delete.xml", timeout = 10)
 public class RollingAppenderCustomDeleteActionTest {
 
+    private static final String CONFIG = "log4j-rolling-with-custom-delete.xml";
     private static final String DIR = "target/rolling-with-delete/test";
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     @Test
+    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         final Logger logger = loggerContextRule.getLogger(RollingAppenderCustomDeleteActionTest.class.getName());
         // Trigger the rollover

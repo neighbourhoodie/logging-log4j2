@@ -31,15 +31,14 @@ import java.util.Random;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * LOG4J2-1804.
  */
-@LoggerContextSource(value = "log4j-rolling-cron-and-size-lookup.xml", timeout = 10)
 public class RollingAppenderCronAndSizeLookupTest {
 
     private static final String CONFIG = "log4j-rolling-cron-and-size-lookup.xml";
@@ -47,7 +46,11 @@ public class RollingAppenderCronAndSizeLookupTest {
     private static final String DIR = "target/rolling-cron-size-lookup";
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     private Logger logger;
 
@@ -57,6 +60,7 @@ public class RollingAppenderCronAndSizeLookupTest {
     }
 
     @Test
+    @Timeout(10)
     public void testAppender() throws Exception {
         final Random rand = new Random();
         // Loop for 500 times with a 5ms wait guarantees at least 2 time based rollovers.
