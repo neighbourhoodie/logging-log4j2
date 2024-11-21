@@ -37,24 +37,27 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
 import org.apache.logging.log4j.core.layout.HtmlLayout;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.util.IOUtils;
 import org.apache.logging.log4j.message.SimpleMessage;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests for LOG4J2-2760
  */
-@LoggerContextSource(timeout = 10)
 public class RollingAppenderDirectWriteWithHtmlLayoutTest {
 
     private static final String DIR = "target/rolling-direct-htmlLayout";
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            null,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     private Configuration config;
 
@@ -64,11 +67,13 @@ public class RollingAppenderDirectWriteWithHtmlLayoutTest {
     }
 
     @Test
+    @Timeout(10)
     public void testRollingFileAppenderWithHtmlLayout() throws Exception {
         checkAppenderWithHtmlLayout(true);
     }
 
     @Test
+    @Timeout(10)
     public void testRollingFileAppenderWithHtmlLayoutNoAppend() throws Exception {
         checkAppenderWithHtmlLayout(false);
     }

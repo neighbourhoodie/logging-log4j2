@@ -16,23 +16,56 @@
  */
 package org.apache.logging.log4j.core.test.junit;
 
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
-public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachCallback {
+public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
     private final String DIR;
+    private final String CONFIG;
+    private final String ClassName;
+    private final ClassLoader ClassNameLoader;
+    private LoggerContext context;
 
-    public CleanFoldersRuleExtension(final String DIR) {
+    public CleanFoldersRuleExtension(
+            final String DIR, final String CONFIG, final String ClassName, final ClassLoader ClassNameLoader) {
         this.DIR = DIR;
+        this.CONFIG = CONFIG;
+        this.ClassName = ClassName;
+        this.ClassNameLoader = ClassNameLoader;
     }
 
+    @Override
     public void beforeEach(ExtensionContext ctx) {
         new CleanFolders(DIR);
+        this.context = Configurator.initialize(ClassName, ClassNameLoader, CONFIG);
     }
 
+    @Override
     public void afterEach(ExtensionContext ctx) {
+        if (this.context != null) {
+            this.context.close();
+        }
         new CleanFolders(DIR);
+    }
+
+    @Override
+    public boolean supportsParameter(final ParameterContext parameterContext, final ExtensionContext extensionContext)
+            throws ParameterResolutionException {
+        // Check if the parameter is of type LoggerContext
+        return parameterContext.getParameter().getType().equals(LoggerContext.class);
+    }
+
+    @Override
+    public Object resolveParameter(final ParameterContext parameterContext, final ExtensionContext extensionContext)
+            throws ParameterResolutionException {
+        // Return the LoggerContext instance
+        return this.context;
     }
 }

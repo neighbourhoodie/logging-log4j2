@@ -31,23 +31,27 @@ import java.util.Random;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * LOG4J2-1804.
  */
-@LoggerContextSource(value = "log4j-rolling-cron-and-size.xml", timeout = 10)
 public class RollingAppenderCronAndSizeTest {
 
+    private static final String CONFIG = "log4j-rolling-cron-and-size.xml";
     private static final String DIR = "target/rolling-cron-size";
 
     private Logger logger;
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     @BeforeEach
     public void setUp(final LoggerContext loggerContextRule) {
@@ -55,6 +59,7 @@ public class RollingAppenderCronAndSizeTest {
     }
 
     @Test
+    @Timeout(10)
     public void testAppender() throws Exception {
         final Random rand = new Random();
         for (int j = 0; j < 100; ++j) {

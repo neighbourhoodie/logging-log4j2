@@ -27,23 +27,28 @@ import java.io.File;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  */
-@LoggerContextSource(value = "log4j-rolling2.xml", timeout = 10)
 public class RollingAppenderTimeTest {
 
+    private static final String CONFIG = "log4j-rolling2.xml";
     private static final String DIR = "target/rolling2";
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     @Test
+    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         final Logger logger = loggerContextRule.getLogger(RollingAppenderTimeTest.class.getName());
         logger.debug("This is test message number 1");

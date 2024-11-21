@@ -22,23 +22,27 @@ import java.io.File;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
-import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
  */
-@LoggerContextSource(value = "log4j2-rolling-1833.xml", timeout = 10)
 public class RollingAppenderDirectWriteWithFilenameTest {
 
+    private static final String CONFIG = "log4j2-rolling-1833.xml";
     private static final String DIR = "target/rolling-1833";
 
     private Logger logger;
 
     @RegisterExtension
-    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(DIR);
+    CleanFoldersRuleExtension extension = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDeleteScriptTest.class.getName(),
+            this.getClass().getClassLoader());
 
     @BeforeEach
     public void setUp(final LoggerContext loggerContextRule) {
@@ -46,6 +50,7 @@ public class RollingAppenderDirectWriteWithFilenameTest {
     }
 
     @Test
+    @Timeout(10)
     public void testAppender(LoggerContext context) {
         final File dir = new File(DIR);
         assertFalse(dir.exists(), "Directory created");
