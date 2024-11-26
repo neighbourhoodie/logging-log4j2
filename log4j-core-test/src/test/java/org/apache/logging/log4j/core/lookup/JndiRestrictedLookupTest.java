@@ -16,7 +16,7 @@
  */
 package org.apache.logging.log4j.core.lookup;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.Serializable;
 import javax.naming.Context;
@@ -25,9 +25,9 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 import org.apache.logging.log4j.message.Message;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.zapodot.junit.ldap.EmbeddedLdapRule;
 import org.zapodot.junit.ldap.EmbeddedLdapRuleBuilder;
 
@@ -50,8 +50,8 @@ public class JndiRestrictedLookupTest {
             .importingLdifs("JndiRestrictedLookup.ldif")
             .build();
 
-    @BeforeClass
-    public static void beforeClass() {
+    @BeforeAll
+    public static void beforeAll() {
         System.setProperty("log4j2.enableJndiLookup", "true");
     }
 
