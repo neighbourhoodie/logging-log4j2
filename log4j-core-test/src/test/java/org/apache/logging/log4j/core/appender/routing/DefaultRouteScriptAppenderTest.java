@@ -16,8 +16,10 @@
  */
 package org.apache.logging.log4j.core.appender.routing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
@@ -28,7 +30,6 @@ import org.apache.logging.log4j.core.config.AppenderControl;
 import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
 import org.apache.logging.log4j.core.util.Constants;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
@@ -72,18 +73,18 @@ public class DefaultRouteScriptAppenderTest {
         final RoutingAppender routingAppender = getRoutingAppender();
         final ConcurrentMap<Object, Object> map = routingAppender.getScriptStaticVariables();
         if (expectBindingEntries) {
-            assertEquals("TestValue2", map.get("TestKey"));
-            assertEquals("HEXDUMP", map.get("MarkerName"));
+            assertEquals(map.get("TestKey"), "TestValue2");
+            assertEquals(map.get("MarkerName"), "HEXDUMP");
         }
     }
 
     private ListAppender getListAppender() {
         final String key = "Service2";
         final RoutingAppender routingAppender = getRoutingAppender();
-        Assert.assertTrue(routingAppender.isStarted());
+        assertTrue(routingAppender.isStarted());
         final Map<String, AppenderControl> appenders = routingAppender.getAppenders();
         final AppenderControl appenderControl = appenders.get(key);
-        assertNotNull("No appender control generated for '" + key + "'; appenders = " + appenders, appenderControl);
+        assertNotNull(appenderControl, "No appender control generated for '" + key + "'; appenders = " + appenders);
         final ListAppender listAppender = (ListAppender) appenderControl.getAppender();
         return listAppender;
     }
@@ -97,11 +98,11 @@ public class DefaultRouteScriptAppenderTest {
         final Logger logger = loggerContextRule.getLogger(DefaultRouteScriptAppenderTest.class);
         logger.error("Hello");
         final ListAppender listAppender = getListAppender();
-        assertEquals("Incorrect number of events", 1, listAppender.getEvents().size());
+        assertEquals(1, listAppender.getEvents().size(), "Incorrect number of events");
         logger.error("World");
-        assertEquals("Incorrect number of events", 2, listAppender.getEvents().size());
+        assertEquals(2, listAppender.getEvents().size(), "Incorrect number of events");
         logger.error(marker, "DEADBEEF");
-        assertEquals("Incorrect number of events", 3, listAppender.getEvents().size());
+        assertEquals(3, listAppender.getEvents().size(), "Incorrect number of events");
     }
 
     @Test(expected = AssertionError.class)
@@ -112,29 +113,27 @@ public class DefaultRouteScriptAppenderTest {
     @Test
     public void testListAppenderPresence() {
         // No appender until an event is routed, even thought we initialized the default route on startup.
-        Assert.assertNull(
-                "No appender control generated",
-                getRoutingAppender().getAppenders().get("Service2"));
+        assertNull(getRoutingAppender().getAppenders().get("Service2"), "No appender control generated");
     }
 
     @Test
     public void testNoPurgePolicy() {
         // No PurgePolicy in this test
-        Assert.assertNull("Unexpected PurgePolicy", getRoutingAppender().getPurgePolicy());
+        assertNull(getRoutingAppender().getPurgePolicy(), "Unexpected PurgePolicy");
     }
 
     @Test
     public void testNoRewritePolicy() {
         // No RewritePolicy in this test
-        Assert.assertNull("Unexpected RewritePolicy", getRoutingAppender().getRewritePolicy());
+        assertNull(getRoutingAppender().getRewritePolicy(), "Unexpected RewritePolicy");
     }
 
     @Test
     public void testRoutingAppenderDefaultRouteKey() {
         final RoutingAppender routingAppender = getRoutingAppender();
-        Assert.assertNotNull(routingAppender.getDefaultRouteScript());
-        Assert.assertNotNull(routingAppender.getDefaultRoute());
-        assertEquals("Service2", routingAppender.getDefaultRoute().getKey());
+        assertNotNull(routingAppender.getDefaultRouteScript());
+        assertNotNull(routingAppender.getDefaultRoute());
+        assertEquals(routingAppender.getDefaultRoute().getKey(), "Service2");
     }
 
     @Test

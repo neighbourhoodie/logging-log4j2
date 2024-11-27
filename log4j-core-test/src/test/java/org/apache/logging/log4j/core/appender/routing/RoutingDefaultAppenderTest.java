@@ -16,8 +16,8 @@
  */
 package org.apache.logging.log4j.core.appender.routing;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.List;
@@ -45,11 +45,11 @@ public class RoutingDefaultAppenderTest {
         StructuredDataMessage msg = new StructuredDataMessage("Test", "This is a test", "Service");
         EventLogger.logEvent(msg);
         final List<LogEvent> list = loggerContextRule.getListAppender("List").getEvents();
-        assertNotNull("No events generated", list);
-        assertTrue("Incorrect number of events. Expected 1, got " + list.size(), list.size() == 1);
+        assertNotNull(list, "No events generated");
+        assertTrue(list.size() == 1, "Incorrect number of events. Expected 1, got " + list.size());
         msg = new StructuredDataMessage("Test", "This is a test", "Alert");
         EventLogger.logEvent(msg);
         final File file = new File(LOG_FILE);
-        assertTrue("Alert file was not created", file.exists());
+        assertTrue(file.exists(), "Alert file was not created");
     }
 }
