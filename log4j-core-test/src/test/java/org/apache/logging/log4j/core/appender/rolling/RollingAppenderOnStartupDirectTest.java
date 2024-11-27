@@ -56,7 +56,7 @@ class RollingAppenderOnStartupDirectTest {
     private static LoggerContext loggerContext;
 
     @BeforeAll
-    static void beforeClass() throws Exception {
+    static void beforeAll() throws Exception {
         if (Files.exists(Paths.get("target/onStartup"))) {
             try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
                 for (final Path path : directoryStream) {
@@ -98,7 +98,7 @@ class RollingAppenderOnStartupDirectTest {
     }
 
     @AfterAll
-    static void afterClass() throws Exception {
+    static void afterAll() throws Exception {
         Configurator.shutdown(loggerContext);
         try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
             for (final Path path : directoryStream) {

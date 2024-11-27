@@ -52,7 +52,7 @@ class RollingAppenderOnStartup2Test {
     private static final String TEST_DATA = "Hello world!";
 
     @BeforeAll
-    static void beforeClass() throws Exception {
+    static void beforeAll() throws Exception {
         if (Files.exists(Paths.get("target/rollOnStartup"))) {
             try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
                 for (final Path path : directoryStream) {
@@ -85,7 +85,7 @@ class RollingAppenderOnStartup2Test {
     }
 
     @AfterAll
-    static void afterClass() {
+    static void afterAll() {
         final long size = 0;
         /* try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
             for (final Path path : directoryStream) {
