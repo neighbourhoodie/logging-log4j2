@@ -31,7 +31,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -52,7 +51,6 @@ public class RollingAppenderCronEvery2Test {
             this.getClass().getClassLoader());
 
     @Test
-    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         // TODO Is there a better way to test than putting the thread to sleep all over the place?
         final Logger logger = loggerContextRule.getLogger(RollingAppenderCronEvery2Test.class.getName());

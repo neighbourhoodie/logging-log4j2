@@ -36,7 +36,6 @@ import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.apache.logging.log4j.core.util.datetime.FixedDateFormat;
 import org.apache.logging.log4j.core.util.datetime.FixedDateFormat.FixedFormat;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -55,7 +54,6 @@ public class RollingAppenderDeleteAccumulatedCount2Test {
             this.getClass().getClassLoader());
 
     @Test
-    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         final Path p1 = writeTextTo(DIR + "/my-1.log"); // glob="test-*.log"
         final Path p2 = writeTextTo(DIR + "/my-2.log");

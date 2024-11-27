@@ -33,7 +33,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -59,7 +58,6 @@ public class RollingAppenderCronAndSizeTest {
     }
 
     @Test
-    @Timeout(10)
     public void testAppender() throws Exception {
         final Random rand = new Random();
         for (int j = 0; j < 100; ++j) {

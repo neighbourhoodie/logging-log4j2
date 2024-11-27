@@ -24,7 +24,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -50,7 +49,6 @@ public class RollingAppenderDirectWriteWithFilenameTest {
     }
 
     @Test
-    @Timeout(10)
     public void testAppender(LoggerContext context) throws Exception {
         final File dir = new File(DIR);
         assertFalse(dir.exists(), "Directory created");

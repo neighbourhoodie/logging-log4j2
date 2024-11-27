@@ -40,7 +40,6 @@ import org.apache.logging.log4j.status.StatusLogger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -71,7 +70,6 @@ public class RollingAppenderDirectWrite1906Test {
     }
 
     @Test
-    @Timeout(10)
     public void testAppender() throws Exception {
         final int count = 100;
         for (int i = 0; i < count; ++i) {

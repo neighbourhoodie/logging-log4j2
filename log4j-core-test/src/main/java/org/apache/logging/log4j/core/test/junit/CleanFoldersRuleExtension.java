@@ -16,8 +16,10 @@
  */
 package org.apache.logging.log4j.core.test.junit;
 
+import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.status.StatusLogger;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -50,7 +52,8 @@ public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachC
     @Override
     public void afterEach(ExtensionContext ctx) {
         if (this.context != null) {
-            this.context.close();
+            Configurator.shutdown(this.context, 10, TimeUnit.SECONDS);
+            StatusLogger.getLogger().reset();
         }
         new CleanFolders(DIR);
     }
