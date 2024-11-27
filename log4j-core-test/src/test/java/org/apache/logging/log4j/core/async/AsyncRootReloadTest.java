@@ -21,28 +21,29 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.test.categories.AsyncLoggers;
 import org.apache.logging.log4j.core.test.junit.CleanFiles;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.util.FileUtils;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.rules.RuleChain;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.apache.logging.log4j.core.test.junit.Tags;
+import org.junit.jupiter.api.Tag;
 
 /**
  * Tests LOG4J2-807.
  */
-@Category(AsyncLoggers.class)
+@Tag(Tags.ASYNC_LOGGERS)
+@LoggerContextSource("classpath:LOG4J2-807.xml")
 public class AsyncRootReloadTest {
 
     private static final String ISSUE = "LOG4J2-807";
     private static final String ISSUE_CONFIG = ISSUE + ".xml";
     private static final String LOG = "target/" + ISSUE + ".log";
-    private static final String RESOURCE = "classpath:" + ISSUE_CONFIG;
 
-    @ClassRule
-    public static RuleChain rules = RuleChain.outerRule(new CleanFiles(LOG)).around(new LoggerContextRule(RESOURCE));
+    @BeforeAll
+    private static void beforeAll() {
+        new CleanFiles(LOG);
+    }
 
     @Test
     public void testLog4j2_807() throws InterruptedException, URISyntaxException {
