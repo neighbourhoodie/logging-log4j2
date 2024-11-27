@@ -58,8 +58,8 @@ public abstract class DefaultRouteScriptAppenderTest {
         final RoutingAppender routingAppender = getRoutingAppender();
         final ConcurrentMap<Object, Object> map = routingAppender.getScriptStaticVariables();
         if (expectBindingEntries) {
-            assertEquals("TestValue2", map.get("TestKey"));
-            assertEquals("HEXDUMP", map.get("MarkerName"));
+            assertEquals(map.get("TestKey"), "TestValue2");
+            assertEquals(map.get("MarkerName"), "HEXDUMP");
         }
     }
 

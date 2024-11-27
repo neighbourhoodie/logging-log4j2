@@ -16,8 +16,8 @@
  */
 package org.apache.logging.log4j.core.appender.routing;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -57,9 +57,9 @@ public class RoutingAppender2767Test {
         final StructuredDataMessage msg = new StructuredDataMessage("Test", "This is a test", "Service");
         EventLogger.logEvent(msg);
         final File file = new File(ACTIVITY_LOG_FILE);
-        assertTrue("Activity file was not created", file.exists());
+        assertTrue(file.exists(), "Activity file was not created");
         final List<String> lines = Files.lines(file.toPath()).collect(Collectors.toList());
-        assertEquals("Incorrect number of lines", 1, lines.size());
-        assertTrue("Incorrect content", lines.get(0).contains("This is a test"));
+        assertEquals(1, lines.size(), "Incorrect number of lines");
+        assertTrue(lines.get(0).contains("This is a test"), "Incorrect content");
     }
 }
