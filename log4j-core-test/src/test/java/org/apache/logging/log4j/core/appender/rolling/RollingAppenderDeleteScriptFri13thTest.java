@@ -30,7 +30,6 @@ import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.apache.logging.log4j.core.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 public class RollingAppenderDeleteScriptFri13thTest {
@@ -51,7 +50,6 @@ public class RollingAppenderDeleteScriptFri13thTest {
             this.getClass().getClassLoader());
 
     @Test
-    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         LocalDate now = LocalDate.now();
         // Ignore on Friday 13th

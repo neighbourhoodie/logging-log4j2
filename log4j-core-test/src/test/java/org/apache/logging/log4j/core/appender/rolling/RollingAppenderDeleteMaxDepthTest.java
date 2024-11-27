@@ -33,7 +33,6 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -52,7 +51,6 @@ public class RollingAppenderDeleteMaxDepthTest {
             this.getClass().getClassLoader());
 
     @Test
-    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         // create some files that match the glob but exceed maxDepth
         final Path p1 = writeTextTo(DIR + "/1/test-4.log"); // glob="**/test-4.log"

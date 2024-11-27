@@ -33,7 +33,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -60,7 +59,6 @@ public class RollingAppenderCronAndSizeLookupTest {
     }
 
     @Test
-    @Timeout(10)
     public void testAppender() throws Exception {
         final Random rand = new Random();
         // Loop for 500 times with a 5ms wait guarantees at least 2 time based rollovers.

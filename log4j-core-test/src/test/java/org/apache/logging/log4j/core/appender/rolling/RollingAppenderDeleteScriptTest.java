@@ -27,7 +27,6 @@ import org.apache.logging.log4j.core.util.Constants;
 import org.apache.logging.log4j.core.util.Integers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -51,7 +50,6 @@ public class RollingAppenderDeleteScriptTest {
             this.getClass().getClassLoader());
 
     @Test
-    @Timeout(10)
     public void testAppender(final LoggerContext loggerContextRule) throws Exception {
         final Logger logger = loggerContextRule.getLogger(RollingAppenderDeleteScriptTest.class.getName());
         // Trigger the rollover

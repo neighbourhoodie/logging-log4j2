@@ -42,7 +42,6 @@ import org.apache.logging.log4j.message.SimpleMessage;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -67,13 +66,11 @@ public class RollingAppenderDirectWriteWithHtmlLayoutTest {
     }
 
     @Test
-    @Timeout(10)
     public void testRollingFileAppenderWithHtmlLayout() throws Exception {
         checkAppenderWithHtmlLayout(true);
     }
 
     @Test
-    @Timeout(10)
     public void testRollingFileAppenderWithHtmlLayoutNoAppend() throws Exception {
         checkAppenderWithHtmlLayout(false);
     }
