@@ -16,11 +16,11 @@
  */
 package org.apache.logging.log4j.core.appender.rolling;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -40,7 +40,7 @@ import org.apache.logging.log4j.core.config.NullConfiguration;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.apache.logging.log4j.core.lookup.StrSubstitutor;
 import org.apache.logging.log4j.core.util.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.Issue;
 
 public class RollingFileManagerTest {

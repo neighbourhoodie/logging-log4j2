@@ -20,13 +20,13 @@ import static org.apache.logging.log4j.core.test.hamcrest.FileMatchers.beforeNow
 import static org.apache.logging.log4j.core.test.hamcrest.FileMatchers.hasLength;
 import static org.apache.logging.log4j.core.test.hamcrest.FileMatchers.isEmpty;
 import static org.apache.logging.log4j.core.test.hamcrest.FileMatchers.lastModified;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +45,7 @@ import org.apache.logging.log4j.core.util.Closer;
 import org.apache.logging.log4j.core.util.FileUtils;
 import org.apache.logging.log4j.core.util.NullOutputStream;
 import org.apache.logging.log4j.util.Strings;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests the RollingRandomAccessFileManager class.

@@ -16,8 +16,9 @@
  */
 package org.apache.logging.log4j.core.appender.rolling;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -33,10 +34,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.DefaultConfiguration;
 import org.apache.logging.log4j.core.util.datetime.FastDateFormat;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -50,8 +50,8 @@ public class RollingAppenderOnStartup2Test {
     private static final String ROLLED_FILE_SUFFIX = "-1.log.gz";
     private static final String TEST_DATA = "Hello world!";
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
+    @BeforeAll
+    public static void beforeAll() throws Exception {
         if (Files.exists(Paths.get("target/rollOnStartup"))) {
             try (final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
                 for (final Path path : directoryStream) {
@@ -64,7 +64,7 @@ public class RollingAppenderOnStartup2Test {
         // System.setProperty("log4j2.StatusLogger.level", "trace");
         final Configuration configuration = new DefaultConfiguration();
         final Path target = Paths.get(TARGET_FILE);
-        Assert.assertFalse(Files.exists(target));
+        assertFalse(Files.exists(target));
         target.toFile().getParentFile().mkdirs();
         final long timeStamp = System.currentTimeMillis() - (1000 * 60 * 60 * 24);
         final String expectedDate = formatter.format(timeStamp);
@@ -83,8 +83,8 @@ public class RollingAppenderOnStartup2Test {
         System.setProperty("log4j.configurationFile", "log4j-rollOnStartup.json");
     }
 
-    @AfterClass
-    public static void afterClass() throws Exception {
+    @AfterAll
+    public static void afterAll() throws Exception {
         final long size = 0;
         /* try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(DIR))) {
             for (final Path path : directoryStream) {

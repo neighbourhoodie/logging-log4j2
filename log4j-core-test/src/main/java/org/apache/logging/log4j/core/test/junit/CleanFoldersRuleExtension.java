@@ -34,6 +34,9 @@ public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachC
     private final String ClassName;
     private final ClassLoader ClassNameLoader;
     private LoggerContext context;
+    private boolean before;
+    private boolean after;
+    private int maxTries;
 
     public CleanFoldersRuleExtension(
             final String DIR, final String CONFIG, final String ClassName, final ClassLoader ClassNameLoader) {
@@ -43,19 +46,44 @@ public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachC
         this.ClassNameLoader = ClassNameLoader;
     }
 
+    public CleanFoldersRuleExtension(
+            final String DIR,
+            final String CONFIG,
+            final String ClassName,
+            final ClassLoader ClassNameLoader,
+            final boolean before,
+            final boolean after,
+            final int maxTries) {
+        this.DIR = DIR;
+        this.CONFIG = CONFIG;
+        this.ClassName = ClassName;
+        this.ClassNameLoader = ClassNameLoader;
+        this.before = before;
+        this.after = after;
+        this.maxTries = maxTries;
+    }
+
     @Override
-    public void beforeEach(ExtensionContext ctx) {
-        new CleanFolders(DIR);
+    public void beforeEach(final ExtensionContext ctx) throws Exception {
+        if (before || after || maxTries > 0) {
+            new CleanFolders(before, after, maxTries, DIR);
+        } else {
+            new CleanFolders(DIR);
+        }
         this.context = Configurator.initialize(ClassName, ClassNameLoader, CONFIG);
     }
 
     @Override
-    public void afterEach(ExtensionContext ctx) {
+    public void afterEach(final ExtensionContext ctx) throws Exception {
         if (this.context != null) {
             Configurator.shutdown(this.context, 10, TimeUnit.SECONDS);
             StatusLogger.getLogger().reset();
         }
-        new CleanFolders(DIR);
+        if (before || after || maxTries > 0) {
+            new CleanFolders(before, after, maxTries, DIR);
+        } else {
+            new CleanFolders(DIR);
+        }
     }
 
     @Override

@@ -16,8 +16,10 @@
  */
 package org.apache.logging.log4j.core.appender.rolling;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import org.apache.logging.log4j.Level;
@@ -30,11 +32,9 @@ import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilder;
 import org.apache.logging.log4j.core.config.builder.api.ConfigurationBuilderFactory;
 import org.apache.logging.log4j.core.config.builder.impl.BuiltConfiguration;
 import org.apache.logging.log4j.core.test.junit.CleanFolders;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Tests https://issues.apache.org/jira/browse/LOG4J2-1798
@@ -44,13 +44,11 @@ public class RollingFileAppenderInterruptedThreadTest {
     private static final String ROLLING_APPENDER_FILES_DIR =
             "target/" + RollingFileAppenderInterruptedThreadTest.class.getSimpleName();
 
-    @Rule
-    public CleanFolders cleanFolders = new CleanFolders(true, false, 3, ROLLING_APPENDER_FILES_DIR);
-
     LoggerContext loggerContext;
 
-    @Before
+    @BeforeEach
     public void setUp() {
+        new CleanFolders(true, false, 3, ROLLING_APPENDER_FILES_DIR);
         final ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
         builder.setConfigurationName("LOG4J2-1798 test");
 
@@ -70,24 +68,25 @@ public class RollingFileAppenderInterruptedThreadTest {
         loggerContext = Configurator.initialize(builder.build());
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         Configurator.shutdown(loggerContext);
         loggerContext = null;
+        new CleanFolders(true, false, 3, ROLLING_APPENDER_FILES_DIR);
     }
 
     @Test
     public void testRolloverInInterruptedThread() {
         final Logger logger = loggerContext.getLogger(getClass().getName());
 
-        Assert.assertThat(logger.getAppenders().values(), hasItem(instanceOf(RollingFileAppender.class)));
+        assertThat(logger.getAppenders().values(), hasItem(instanceOf(RollingFileAppender.class)));
 
         logger.info("Sending logging event 1"); // send first event to initialize rollover system
 
         Thread.currentThread().interrupt(); // mark thread as interrupted
         logger.info("Sending logging event 2"); // send second event to trigger rotation, expecting 2 files in result
 
-        Assert.assertTrue(new File(ROLLING_APPENDER_FILES_DIR, "file-1.log").exists());
-        Assert.assertTrue(new File(ROLLING_APPENDER_FILES_DIR, "file-2.log").exists());
+        assertTrue(new File(ROLLING_APPENDER_FILES_DIR, "file-1.log").exists());
+        assertTrue(new File(ROLLING_APPENDER_FILES_DIR, "file-2.log").exists());
     }
 }
