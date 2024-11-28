@@ -23,29 +23,32 @@ import java.io.File;
 import java.util.List;
 import org.apache.logging.log4j.EventLogger;
 import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.test.appender.ListAppender;
+import org.apache.logging.log4j.core.test.junit.CleanFiles;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  */
+@LoggerContextSource("log4j-routing2.json")
 public class JsonRoutingAppender2Test {
-    private static final String CONFIG = "log4j-routing2.json";
     private static final String LOG_FILENAME = "target/rolling1/rollingtest-Unknown.log";
 
-    private final LoggerContextRule loggerContextRule = new LoggerContextRule(CONFIG);
-
-    @Rule
-    public RuleChain rules = loggerContextRule.withCleanFilesRule(LOG_FILENAME);
+    @BeforeEach
+    public void beforeEach() {
+        new CleanFiles(LOG_FILENAME);
+    }
 
     @Test
-    public void routingTest() {
+    public void routingTest(final LoggerContext loggerContext) {
         StructuredDataMessage msg = new StructuredDataMessage("Test", "This is a test", "Service");
         EventLogger.logEvent(msg);
-        final List<LogEvent> list = loggerContextRule.getListAppender("List").getEvents();
+        final ListAppender app = loggerContext.getConfiguration().getAppender("List");
+        final List<LogEvent> list = app.getEvents();
         assertNotNull(list, "No events generated");
         assertTrue(list.size() == 1, "Incorrect number of events. Expected 1, got " + list.size());
         msg = new StructuredDataMessage("Test", "This is a test", "Unknown");
