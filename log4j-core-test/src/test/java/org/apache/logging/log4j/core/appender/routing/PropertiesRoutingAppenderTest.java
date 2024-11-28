@@ -23,40 +23,42 @@ import java.io.File;
 import java.util.List;
 import org.apache.logging.log4j.EventLogger;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.appender.ListAppender;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
+import org.apache.logging.log4j.core.test.junit.CleanFiles;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.apache.logging.log4j.core.test.junit.Named;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  *
  */
+@LoggerContextSource("log4j-routing.properties")
 public class PropertiesRoutingAppenderTest {
-    private static final String CONFIG = "log4j-routing.properties";
     private static final String UNKNOWN_LOG_FILE = "target/rolling1/rollingtestProps-Unknown.log";
     private static final String ALERT_LOG_FILE = "target/routing1/routingtestProps-Alert.log";
     private static final String ACTIVITY_LOG_FILE = "target/routing1/routingtestProps-Activity.log";
 
     private ListAppender app;
+    private LoggerContext context = null;
 
-    private final LoggerContextRule loggerContextRule = new LoggerContextRule(CONFIG);
-
-    @Rule
-    public RuleChain rules = loggerContextRule.withCleanFilesRule(UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
-
-    @Before
-    public void setUp() throws Exception {
-        this.app = this.loggerContextRule.getListAppender("List");
+    PropertiesRoutingAppenderTest(LoggerContext context) {
+        this.context = context;
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @BeforeEach
+    public void beforeEach() throws Exception {
+        new CleanFiles(UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
+        this.app = context.getConfiguration().getAppender("List");
+    }
+
+    @AfterEach
+    public void tearDown(@Named("List") final ListAppender appender) throws Exception {
         this.app.clear();
-        this.loggerContextRule.getLoggerContext().stop();
+        this.app.stop();
     }
 
     @Test
