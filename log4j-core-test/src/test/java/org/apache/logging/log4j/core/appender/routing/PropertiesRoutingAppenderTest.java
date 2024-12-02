@@ -52,13 +52,13 @@ public class PropertiesRoutingAppenderTest {
     @BeforeEach
     public void beforeEach() throws Exception {
         new CleanFiles(UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
-        this.app = context.getConfiguration().getAppender("List");
+        this.app = this.context.getConfiguration().getAppender("List");
     }
 
     @AfterEach
     public void tearDown(@Named("List") final ListAppender appender) throws Exception {
         this.app.clear();
-        this.app.stop();
+        this.context.stop();
     }
 
     @Test
