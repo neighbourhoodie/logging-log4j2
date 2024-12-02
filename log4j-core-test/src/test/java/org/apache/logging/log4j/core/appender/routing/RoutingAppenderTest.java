@@ -28,7 +28,7 @@ import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,17 +51,13 @@ public class RoutingAppenderTest {
     @BeforeEach
     public void beforeEach() {
         new CleanFiles(UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
-        this.app = context.getConfiguration().getAppender("List");
+        this.app = this.context.getConfiguration().getAppender("List");
     }
-    // @Before
-    // public void setUp() throws Exception {
-    //     this.app = this.loggerContextRule.getListAppender("List");
-    // }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    public void tearDown() throws Exception {
         this.app.clear();
-        this.app.stop();
+        this.context.stop();
     }
 
     @Test
