@@ -26,32 +26,39 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.test.junit.CleanFiles;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.message.StringMapMessage;
-import org.junit.After;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+@LoggerContextSource("log4j-routing3350.xml")
 public class RoutingAppender3350Test {
-    private static final String CONFIG = "log4j-routing3350.xml";
     private static final String LOG_FILE = "target/tmp/test.log";
 
-    private final LoggerContextRule loggerContextRule = new LoggerContextRule(CONFIG);
+    private LoggerContext context = null;
 
-    @Rule
-    public RuleChain rules = loggerContextRule.withCleanFilesRule(LOG_FILE);
+    RoutingAppender3350Test(LoggerContext context) {
+        this.context = context;
+    }
 
-    @After
+    @BeforeEach
+    public void beforeEach() throws Exception {
+        new CleanFiles(LOG_FILE);
+    }
+
+    @AfterEach
     public void tearDown() throws Exception {
-        this.loggerContextRule.getLoggerContext().stop();
+        this.context.stop();
     }
 
     @Test
-    public void routingTest() throws IOException {
+    public void routingTest(final LoggerContext loggerContext) throws IOException {
         final String expected = "expectedValue";
         final StringMapMessage message = new StringMapMessage().with("data", expected);
-        final Logger logger = loggerContextRule.getLoggerContext().getLogger(getClass());
+        final Logger logger = loggerContext.getLogger(getClass());
         logger.error(message);
         final File file = new File(LOG_FILE);
         try (final InputStream inputStream = new FileInputStream(file);
