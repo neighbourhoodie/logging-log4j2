@@ -41,6 +41,9 @@ public class JdbcRule implements TestRule {
     private final String createTableStatement;
     private final String dropTableStatement;
 
+    private Connection connection;
+    private Statement statement;
+
     /**
      * Creates a JdbcRule using a {@link ConnectionSource} and a table creation statement.
      *
@@ -63,22 +66,33 @@ public class JdbcRule implements TestRule {
         return new org.junit.runners.model.Statement() {
             @Override
             public void evaluate() throws Throwable {
-                try (final Connection connection = getConnection();
-                        final Statement statement = connection.createStatement()) {
-                    try {
-                        if (StringUtils.isNotEmpty(createTableStatement)) {
-                            statement.executeUpdate(createTableStatement);
-                        }
-                        base.evaluate();
-                    } finally {
-                        if (StringUtils.isNotEmpty(dropTableStatement)) {
-                            statement.executeUpdate(dropTableStatement);
-                        }
-                        statement.execute("SHUTDOWN");
-                    }
+                try {
+                    setupConnection();
+                    base.evaluate();
+                } finally {
+                    closeConnection();
                 }
             }
         };
+    }
+
+    void setupConnection() throws SQLException {
+        connection = getConnection();
+        statement = connection.createStatement();
+
+        if (StringUtils.isNotEmpty(createTableStatement)) {
+            statement.executeUpdate(createTableStatement);
+        }
+    }
+
+    void closeConnection() throws SQLException {
+        if (StringUtils.isNotEmpty(dropTableStatement)) {
+            statement.executeUpdate(dropTableStatement);
+        }
+        statement.execute("SHUTDOWN");
+
+        statement.close();
+        connection.close();
     }
 
     public Connection getConnection() throws SQLException {
