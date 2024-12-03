@@ -23,6 +23,9 @@ import java.sql.Statement;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.appender.db.jdbc.ConnectionSource;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 
@@ -35,7 +38,7 @@ import org.junit.runner.Description;
  * @since 2.8
  */
 @SuppressFBWarnings("SQL_INJECTION_JDBC")
-public class JdbcRule implements TestRule {
+public class JdbcRule implements TestRule, BeforeEachCallback, AfterEachCallback {
 
     private final ConnectionSource connectionSource;
     private final String createTableStatement;
@@ -74,6 +77,16 @@ public class JdbcRule implements TestRule {
                 }
             }
         };
+    }
+
+    @Override
+    public void beforeEach(ExtensionContext context) throws Exception {
+        setupConnection();
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) throws Exception {
+        closeConnection();
     }
 
     void setupConnection() throws SQLException {
