@@ -24,32 +24,37 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.EventLogger;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.test.junit.CleanFiles;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+// import org.junit.Rule;
+// import org.junit.rules.RuleChain;
 
 /**
  *
  */
+@LoggerContextSource("log4j-routing-2767.xml")
 public class RoutingAppender2767Test {
-    private static final String CONFIG = "log4j-routing-2767.xml";
     private static final String ACTIVITY_LOG_FILE = "target/routing1/routingtest-Service.log";
 
-    private final LoggerContextRule loggerContextRule = new LoggerContextRule(CONFIG);
+    private LoggerContext context = null;
 
-    @Rule
-    public RuleChain rules = loggerContextRule.withCleanFilesRule(ACTIVITY_LOG_FILE);
+    RoutingAppender2767Test(LoggerContext context) {
+        this.context = context;
+    }
 
-    @Before
-    public void setUp() {}
+    @BeforeEach
+    public void beforeEach() throws Exception {
+        new CleanFiles(ACTIVITY_LOG_FILE);
+    }
 
-    @After
-    public void tearDown() {
-        this.loggerContextRule.getLoggerContext().stop();
+    @AfterEach
+    public void tearDown() throws Exception {
+        this.context.stop();
     }
 
     @Test
