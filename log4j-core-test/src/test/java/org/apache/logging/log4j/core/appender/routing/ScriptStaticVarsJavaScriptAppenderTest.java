@@ -20,7 +20,9 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.test.junit.ReconfigurationPolicy;
 
-@LoggerContextSource(value = "log4j-routing-script-staticvars-javascript.xml", reconfigure = ReconfigurationPolicy.BEFORE_EACH)
+@LoggerContextSource(
+        value = "log4j-routing-script-staticvars-javascript.xml",
+        reconfigure = ReconfigurationPolicy.BEFORE_EACH)
 public class ScriptStaticVarsJavaScriptAppenderTest extends DefaultRouteScriptAppenderTest {
     public ScriptStaticVarsJavaScriptAppenderTest(LoggerContext context) {
         super(context, true);
