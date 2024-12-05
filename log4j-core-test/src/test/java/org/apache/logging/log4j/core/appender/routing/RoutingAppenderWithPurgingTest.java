@@ -27,20 +27,20 @@ import java.util.List;
 import java.util.Set;
 import org.apache.logging.log4j.EventLogger;
 import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.appender.ListAppender;
-import org.apache.logging.log4j.core.test.junit.LoggerContextRule;
+import org.apache.logging.log4j.core.test.junit.CleanFiles;
+import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.apache.logging.log4j.core.test.junit.Named;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.RuleChain;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 /**
  * Tests Routing appender purge facilities
  */
 public class RoutingAppenderWithPurgingTest {
-    private static final String CONFIG = "log4j-routing-purge.xml";
     private static final String IDLE_LOG_FILE1 = "target/routing-purge-idle/routingtest-1.log";
     private static final String IDLE_LOG_FILE2 = "target/routing-purge-idle/routingtest-2.log";
     private static final String IDLE_LOG_FILE3 = "target/routing-purge-idle/routingtest-3.log";
@@ -48,36 +48,23 @@ public class RoutingAppenderWithPurgingTest {
     private static final String MANUAL_LOG_FILE2 = "target/routing-purge-manual/routingtest-2.log";
     private static final String MANUAL_LOG_FILE3 = "target/routing-purge-manual/routingtest-3.log";
 
-    private ListAppender app;
-    private RoutingAppender routingAppenderIdle;
-    private RoutingAppender routingAppenderIdleWithHangingAppender;
-    private RoutingAppender routingAppenderManual;
-
-    private final LoggerContextRule loggerContextRule = new LoggerContextRule(CONFIG);
-
-    @Rule
-    public RuleChain chain = loggerContextRule.withCleanFilesRule(
-            IDLE_LOG_FILE1, IDLE_LOG_FILE2, IDLE_LOG_FILE3, MANUAL_LOG_FILE1, MANUAL_LOG_FILE2, MANUAL_LOG_FILE3);
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        this.app = this.loggerContextRule.getListAppender("List");
-        this.routingAppenderIdle =
-                this.loggerContextRule.getRequiredAppender("RoutingPurgeIdle", RoutingAppender.class);
-        this.routingAppenderIdleWithHangingAppender = this.loggerContextRule.getRequiredAppender(
-                "RoutingPurgeIdleWithHangingAppender", RoutingAppender.class);
-        this.routingAppenderManual =
-                this.loggerContextRule.getRequiredAppender("RoutingPurgeManual", RoutingAppender.class);
+        new CleanFiles(
+                IDLE_LOG_FILE1, IDLE_LOG_FILE2, IDLE_LOG_FILE3, MANUAL_LOG_FILE1, MANUAL_LOG_FILE2, MANUAL_LOG_FILE3);
     }
 
-    @After
-    public void tearDown() {
-        this.app.clear();
-        this.loggerContextRule.getLoggerContext().stop();
-    }
-
-    @Test(timeout = 5000)
-    public void routingTest() throws InterruptedException {
+    @Test
+    @Timeout(5000)
+    @LoggerContextSource("log4j-routing-purge.xml")
+    public void routingTest(
+            final LoggerContext loggerContext,
+            @Named("List") final ListAppender app,
+            @Named("RoutingPurgeIdle") final RoutingAppender routingAppenderIdle,
+            @Named("RoutingPurgeIdleWithHangingAppender") final RoutingAppender routingAppenderIdleWithHangingAppender,
+            @Named("RoutingPurgeManual") final RoutingAppender routingAppenderManual,
+            @Named("ReferencedList") final ListAppender referencedListAppender)
+            throws InterruptedException {
         StructuredDataMessage msg = new StructuredDataMessage("1", "This is a test 1", "Service");
         EventLogger.logEvent(msg);
         final List<LogEvent> list = app.getEvents();
@@ -95,9 +82,7 @@ public class RoutingAppenderWithPurgingTest {
         expectedAppenderKeys.add("3");
         assertEquals(expectedAppenderKeys, routingAppenderManual.getAppenders().keySet());
 
-        assertFalse(((ListAppender) loggerContextRule.getAppender("ReferencedList"))
-                .getEvents()
-                .isEmpty());
+        assertFalse(((ListAppender) referencedListAppender).getEvents().isEmpty());
 
         assertEquals(
                 2, routingAppenderIdle.getAppenders().size(), "Incorrect number of appenders with IdlePurgePolicy.");
@@ -124,9 +109,7 @@ public class RoutingAppenderWithPurgingTest {
         assertEquals(
                 0, routingAppenderManual.getAppenders().size(), "Incorrect number of appenders with manual purge.");
 
-        assertFalse(
-                loggerContextRule.getAppender("ReferencedList").isStopped(),
-                "Reference based routes should not be stoppable");
+        assertFalse(referencedListAppender.isStopped(), "Reference based routes should not be stoppable");
 
         msg = new StructuredDataMessage("5", "This is a test 5", "Service");
         EventLogger.logEvent(msg);
