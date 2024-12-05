@@ -25,9 +25,9 @@ import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.test.junit.Tags;
 import org.apache.logging.log4j.core.util.FileUtils;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests LOG4J2-807.
@@ -40,10 +40,8 @@ public class AsyncRootReloadTest {
     private static final String ISSUE_CONFIG = ISSUE + ".xml";
     private static final String LOG = "target/" + ISSUE + ".log";
 
-    @BeforeAll
-    private static void beforeAll() {
-        new CleanFiles(LOG);
-    }
+    @RegisterExtension
+    CleanFiles cleanFiles = new CleanFiles(LOG);
 
     @Test
     public void testLog4j2_807() throws InterruptedException, URISyntaxException {
