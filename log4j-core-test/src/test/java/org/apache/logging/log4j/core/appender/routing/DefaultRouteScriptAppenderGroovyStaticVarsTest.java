@@ -21,10 +21,10 @@ import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.test.junit.ReconfigurationPolicy;
 
 @LoggerContextSource(
-        value = "log4j-routing-default-route-script-javascript.xml",
+        value = "log4j-routing-script-staticvars-groovy.xml",
         reconfigure = ReconfigurationPolicy.BEFORE_EACH)
-public class DefaultRouteScriptJavaScriptAppenderTest extends DefaultRouteScriptAppenderTest {
-    public DefaultRouteScriptJavaScriptAppenderTest(LoggerContext context) {
-        super(context, false);
+public class DefaultRouteScriptAppenderGroovyStaticVarsTest extends DefaultRouteScriptAppenderTest {
+    public DefaultRouteScriptAppenderGroovyStaticVarsTest(LoggerContext context) {
+        super(context, true);
     }
 }

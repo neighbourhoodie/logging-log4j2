@@ -23,8 +23,8 @@ import org.apache.logging.log4j.core.test.junit.ReconfigurationPolicy;
 @LoggerContextSource(
         value = "log4j-routing-default-route-script-groovy.xml",
         reconfigure = ReconfigurationPolicy.BEFORE_EACH)
-public class DefaultRouteScriptGroovyAppenderTest extends DefaultRouteScriptAppenderTest {
-    public DefaultRouteScriptGroovyAppenderTest(LoggerContext context) {
+public class DefaultRouteScriptAppenderGroovyTest extends DefaultRouteScriptAppenderTest {
+    public DefaultRouteScriptAppenderGroovyTest(LoggerContext context) {
         super(context, false);
     }
 }
