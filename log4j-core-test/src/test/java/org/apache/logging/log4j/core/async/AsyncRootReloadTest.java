@@ -42,7 +42,7 @@ public class AsyncRootReloadTest {
 
     @BeforeAll
     private static void beforeAll() {
-        new CleanFiles(LOG);
+        new CleanFiles(false, true, 10, LOG);
     }
 
     @Test
