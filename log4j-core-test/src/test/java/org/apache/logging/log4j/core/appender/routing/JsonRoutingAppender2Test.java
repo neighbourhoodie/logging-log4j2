@@ -28,8 +28,8 @@ import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
@@ -38,10 +38,8 @@ import org.junit.jupiter.api.Test;
 public class JsonRoutingAppender2Test {
     private static final String LOG_FILENAME = "target/rolling1/rollingtest-Unknown.log";
 
-    @BeforeEach
-    public void beforeEach() {
-        new CleanFiles(LOG_FILENAME);
-    }
+    @RegisterExtension
+    CleanFiles cleanFiles = new CleanFiles(LOG_FILENAME);
 
     @Test
     public void routingTest(final LoggerContext loggerContext) {

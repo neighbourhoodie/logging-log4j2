@@ -31,6 +31,7 @@ import org.apache.logging.log4j.message.StructuredDataMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
@@ -48,9 +49,11 @@ public class RoutingAppenderTest {
         this.context = context;
     }
 
+    @RegisterExtension
+    CleanFiles cleanFiles = new CleanFiles(UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
+
     @BeforeEach
     public void beforeEach() {
-        new CleanFiles(UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
         this.app = this.context.getConfiguration().getAppender("List");
     }
 

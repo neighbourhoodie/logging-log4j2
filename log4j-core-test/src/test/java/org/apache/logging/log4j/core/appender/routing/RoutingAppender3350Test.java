@@ -31,8 +31,8 @@ import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.message.StringMapMessage;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 @LoggerContextSource("log4j-routing3350.xml")
 public class RoutingAppender3350Test {
@@ -44,10 +44,8 @@ public class RoutingAppender3350Test {
         this.context = context;
     }
 
-    @BeforeEach
-    public void beforeEach() throws Exception {
-        new CleanFiles(LOG_FILE);
-    }
+    @RegisterExtension
+    CleanFiles cleanFiles = new CleanFiles(LOG_FILE);
 
     @AfterEach
     public void tearDown() throws Exception {

@@ -33,9 +33,9 @@ import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.test.junit.Named;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests Routing appender purge facilities
@@ -48,11 +48,9 @@ public class RoutingAppenderWithPurgingTest {
     private static final String MANUAL_LOG_FILE2 = "target/routing-purge-manual/routingtest-2.log";
     private static final String MANUAL_LOG_FILE3 = "target/routing-purge-manual/routingtest-3.log";
 
-    @BeforeEach
-    public void setUp() {
-        new CleanFiles(
-                IDLE_LOG_FILE1, IDLE_LOG_FILE2, IDLE_LOG_FILE3, MANUAL_LOG_FILE1, MANUAL_LOG_FILE2, MANUAL_LOG_FILE3);
-    }
+    @RegisterExtension
+    CleanFiles cleanFiles = new CleanFiles(
+            IDLE_LOG_FILE1, IDLE_LOG_FILE2, IDLE_LOG_FILE3, MANUAL_LOG_FILE1, MANUAL_LOG_FILE2, MANUAL_LOG_FILE3);
 
     @Test
     @Timeout(5000)
