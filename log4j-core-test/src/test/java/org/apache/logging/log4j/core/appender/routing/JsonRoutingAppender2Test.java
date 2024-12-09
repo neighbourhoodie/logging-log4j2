@@ -34,7 +34,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 /**
  *
  */
-@LoggerContextSource("log4j-routing2.json")
 public class JsonRoutingAppender2Test {
     private static final String LOG_FILENAME = "target/rolling1/rollingtest-Unknown.log";
 
@@ -42,6 +41,7 @@ public class JsonRoutingAppender2Test {
     CleanFiles cleanFiles = new CleanFiles(false, true, 10, LOG_FILENAME);
 
     @Test
+    @LoggerContextSource("log4j-routing2.json")
     public void routingTest(final LoggerContext loggerContext) {
         StructuredDataMessage msg = new StructuredDataMessage("Test", "This is a test", "Service");
         EventLogger.logEvent(msg);

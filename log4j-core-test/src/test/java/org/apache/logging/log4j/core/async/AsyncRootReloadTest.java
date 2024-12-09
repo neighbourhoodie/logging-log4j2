@@ -33,7 +33,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
  * Tests LOG4J2-807.
  */
 @Tag(Tags.ASYNC_LOGGERS)
-@LoggerContextSource("classpath:LOG4J2-807.xml")
 public class AsyncRootReloadTest {
 
     private static final String ISSUE = "LOG4J2-807";
@@ -44,6 +43,7 @@ public class AsyncRootReloadTest {
     CleanFiles cleanFiles = new CleanFiles(false, true, 10, LOG);
 
     @Test
+    @LoggerContextSource("classpath:LOG4J2-807.xml")
     public void testLog4j2_807() throws InterruptedException, URISyntaxException {
         final URL url = AsyncRootReloadTest.class.getResource("/" + ISSUE_CONFIG);
         final File configFile = FileUtils.fileFromUri(url.toURI());
