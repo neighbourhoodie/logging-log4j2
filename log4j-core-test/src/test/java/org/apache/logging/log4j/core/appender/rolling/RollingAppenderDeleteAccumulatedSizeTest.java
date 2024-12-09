@@ -44,9 +44,9 @@ public class RollingAppenderDeleteAccumulatedSizeTest {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
 
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderDeleteAccumulatedSizeTest.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingAppenderDeleteAccumulatedSizeTest.class.getName());
         for (int i = 0; i < 10; ++i) {
             // 30 chars per message: each message triggers a rollover
             logger.debug("This is a test message number " + i); // 30 chars:

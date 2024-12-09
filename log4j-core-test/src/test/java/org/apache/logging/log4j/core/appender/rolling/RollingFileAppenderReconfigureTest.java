@@ -27,7 +27,7 @@ public class RollingFileAppenderReconfigureTest {
 
     @Test
     @LoggerContextSource(value = "rolling-file-appender-reconfigure.xml")
-    public void testReconfigure(final LoggerContext loggerContextRule) {
-        loggerContextRule.reconfigure();
+    public void testReconfigure(final LoggerContext loggerContext) {
+        loggerContext.reconfigure();
     }
 }

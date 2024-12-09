@@ -51,8 +51,8 @@ public class RollingAppenderTimeAndSizeDirectTest {
     private Logger logger;
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingAppenderTimeAndSizeDirectTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingAppenderTimeAndSizeDirectTest.class.getName());
     }
 
     @Test

@@ -45,8 +45,8 @@ public class RollingRandomAppenderDirectWriteWithFilenameTest {
     private Logger logger;
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingRandomAppenderDirectWriteWithFilenameTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingRandomAppenderDirectWriteWithFilenameTest.class.getName());
     }
 
     @Test

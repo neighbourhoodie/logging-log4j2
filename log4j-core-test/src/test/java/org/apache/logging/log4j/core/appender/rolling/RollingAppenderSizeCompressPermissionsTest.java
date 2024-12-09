@@ -58,12 +58,12 @@ public class RollingAppenderSizeCompressPermissionsTest {
     }
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingAppenderSizeCompressPermissionsTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingAppenderSizeCompressPermissionsTest.class.getName());
     }
 
     @Test
-    public void testAppenderCompressPermissions(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppenderCompressPermissions(final LoggerContext loggerContext) throws Exception {
         for (int i = 0; i < 500; ++i) {
             final String message = "This is test message number " + i;
             logger.debug(message);
@@ -71,8 +71,8 @@ public class RollingAppenderSizeCompressPermissionsTest {
                 Thread.sleep(500);
             }
         }
-        if (!loggerContextRule.stop(30, TimeUnit.SECONDS)) {
-            System.err.println("Could not stop cleanly " + loggerContextRule + " for " + this);
+        if (!loggerContext.stop(30, TimeUnit.SECONDS)) {
+            System.err.println("Could not stop cleanly " + loggerContext + " for " + this);
         }
         final File dir = new File(DIR);
         assertTrue(dir.exists(), "Directory not created");

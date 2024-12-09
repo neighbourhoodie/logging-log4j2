@@ -51,9 +51,9 @@ public class RollingDirectTimeNewDirectoryTest {
      * @throws Exception
      */
     @Test
-    public void streamClosedError(final LoggerContext loggerContextRule) throws Exception {
+    public void streamClosedError(final LoggerContext loggerContext) throws Exception {
 
-        final Logger logger = loggerContextRule.getLogger(RollingDirectTimeNewDirectoryTest.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingDirectTimeNewDirectoryTest.class.getName());
 
         for (int i = 0; i < 1000; i++) {
             logger.info("nHq6p9kgfvWfjzDRYbZp");

@@ -51,14 +51,14 @@ public class RollingAppenderDeleteMaxDepthTest {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
         // create some files that match the glob but exceed maxDepth
         final Path p1 = writeTextTo(DIR + "/1/test-4.log"); // glob="**/test-4.log"
         final Path p2 = writeTextTo(DIR + "/2/test-4.log");
         final Path p3 = writeTextTo(DIR + "/1/2/test-4.log");
         final Path p4 = writeTextTo(DIR + "/1/2/3/test-4.log");
 
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderDeleteMaxDepthTest.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingAppenderDeleteMaxDepthTest.class.getName());
         for (int i = 0; i < 10; ++i) {
             // 30 chars per message: each message triggers a rollover
             logger.debug("This is a test message number " + i); // 30 chars:

@@ -51,9 +51,9 @@ public class RollingAppenderCronEvery2Test {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
         // TODO Is there a better way to test than putting the thread to sleep all over the place?
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderCronEvery2Test.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingAppenderCronEvery2Test.class.getName());
         final File file = new File(FILE);
         assertTrue(file.exists(), "Log file does not exist");
         final long end = System.currentTimeMillis() + 5000;

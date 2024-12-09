@@ -47,8 +47,8 @@ public class RollingAppenderTimeTest {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderTimeTest.class.getName());
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
+        final Logger logger = loggerContext.getLogger(RollingAppenderTimeTest.class.getName());
         logger.debug("This is test message number 1");
         Thread.sleep(1500);
         // Trigger the rollover

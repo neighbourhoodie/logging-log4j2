@@ -53,11 +53,11 @@ public class RollingDirectSizeTimeNewDirectoryTest implements RolloverListener {
     private final Map<String, AtomicInteger> rolloverFiles = new HashMap<>();
 
     @Test
-    public void streamClosedError(final LoggerContext loggerContextRule) throws Exception {
-        ((RollingFileAppender) loggerContextRule.getConfiguration().getAppender("RollingFile"))
+    public void streamClosedError(final LoggerContext loggerContext) throws Exception {
+        ((RollingFileAppender) loggerContext.getConfiguration().getAppender("RollingFile"))
                 .getManager()
                 .addRolloverListener(this);
-        final Logger logger = loggerContextRule.getLogger(RollingDirectSizeTimeNewDirectoryTest.class);
+        final Logger logger = loggerContext.getLogger(RollingDirectSizeTimeNewDirectoryTest.class);
 
         for (int i = 0; i < 1000; i++) {
             logger.info("nHq6p9kgfvWfjzDRYbZp");

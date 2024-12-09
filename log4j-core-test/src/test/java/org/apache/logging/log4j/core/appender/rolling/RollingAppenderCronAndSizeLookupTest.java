@@ -54,8 +54,8 @@ public class RollingAppenderCronAndSizeLookupTest {
     private Logger logger;
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingAppenderCronAndSizeLookupTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingAppenderCronAndSizeLookupTest.class.getName());
     }
 
     @Test

@@ -54,14 +54,14 @@ public class RollingAppenderDeleteAccumulatedCount2Test {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
         final Path p1 = writeTextTo(DIR + "/my-1.log"); // glob="test-*.log"
         final Path p2 = writeTextTo(DIR + "/my-2.log");
         final Path p3 = writeTextTo(DIR + "/my-3.log");
         final Path p4 = writeTextTo(DIR + "/my-4.log");
         final Path p5 = writeTextTo(DIR + "/my-5.log");
 
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderDeleteAccumulatedCount2Test.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingAppenderDeleteAccumulatedCount2Test.class.getName());
         for (int i = 0; i < 10; ++i) {
             updateLastModified(p1, p2, p3, p4, p5); // make my-*.log files most recent
 

@@ -53,8 +53,8 @@ public class RollingAppenderCronAndSizeTest {
             this.getClass().getClassLoader());
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingAppenderCronAndSizeTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingAppenderCronAndSizeTest.class.getName());
     }
 
     @Test

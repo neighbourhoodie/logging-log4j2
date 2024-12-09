@@ -54,12 +54,12 @@ public class RollingAppenderSizeWithTimeTest {
     private Logger logger;
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingAppenderSizeWithTimeTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingAppenderSizeWithTimeTest.class.getName());
     }
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
         final List<String> messages = new ArrayList<>();
         for (int i = 0; i < 5000; ++i) {
             final String message = "This is test message number " + i;
@@ -69,8 +69,8 @@ public class RollingAppenderSizeWithTimeTest {
                 Thread.sleep(10);
             }
         }
-        if (!loggerContextRule.stop(30, TimeUnit.SECONDS)) {
-            System.err.println("Could not stop cleanly " + loggerContextRule + " for " + this);
+        if (!loggerContext.stop(30, TimeUnit.SECONDS)) {
+            System.err.println("Could not stop cleanly " + loggerContext + " for " + this);
         }
         final File dir = new File(DIR);
         assertTrue(dir.exists(), "Directory not created");

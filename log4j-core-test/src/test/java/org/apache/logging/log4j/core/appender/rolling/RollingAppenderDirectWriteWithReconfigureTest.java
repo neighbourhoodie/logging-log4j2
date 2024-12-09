@@ -53,8 +53,8 @@ public class RollingAppenderDirectWriteWithReconfigureTest {
     private Logger logger;
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingAppenderDirectWriteWithReconfigureTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingAppenderDirectWriteWithReconfigureTest.class.getName());
     }
 
     @Test

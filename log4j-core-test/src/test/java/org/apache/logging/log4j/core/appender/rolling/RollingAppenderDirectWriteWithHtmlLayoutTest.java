@@ -61,8 +61,8 @@ public class RollingAppenderDirectWriteWithHtmlLayoutTest {
     private Configuration config;
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) throws Exception {
-        this.config = loggerContextRule.getConfiguration();
+    public void setUp(final LoggerContext loggerContext) throws Exception {
+        this.config = loggerContext.getConfiguration();
     }
 
     @Test

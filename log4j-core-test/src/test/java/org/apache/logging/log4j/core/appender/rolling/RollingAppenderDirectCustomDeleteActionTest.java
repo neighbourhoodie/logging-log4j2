@@ -48,9 +48,9 @@ public class RollingAppenderDirectCustomDeleteActionTest implements RolloverList
     private boolean fileFound = false;
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderDirectCustomDeleteActionTest.class.getName());
-        final RollingFileAppender app = loggerContextRule.getConfiguration().getAppender("RollingFile");
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
+        final Logger logger = loggerContext.getLogger(RollingAppenderDirectCustomDeleteActionTest.class.getName());
+        final RollingFileAppender app = loggerContext.getConfiguration().getAppender("RollingFile");
         assertNotNull(app, "No RollingFileAppender");
         app.getManager().addRolloverListener(this);
         // Trigger the rollover

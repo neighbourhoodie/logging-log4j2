@@ -50,8 +50,8 @@ public class RollingAppenderDeleteScriptTest {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderDeleteScriptTest.class.getName());
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
+        final Logger logger = loggerContext.getLogger(RollingAppenderDeleteScriptTest.class.getName());
         // Trigger the rollover
         for (int i = 0; i < 10; ++i) {
             // 30 chars per message: each message triggers a rollover

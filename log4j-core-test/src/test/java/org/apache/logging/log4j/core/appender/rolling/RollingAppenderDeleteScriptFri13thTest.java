@@ -50,7 +50,7 @@ public class RollingAppenderDeleteScriptFri13thTest {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
         LocalDate now = LocalDate.now();
         // Ignore on Friday 13th
         assumeFalse(now.getDayOfWeek() == DayOfWeek.FRIDAY && now.getDayOfMonth() == 13);
@@ -62,7 +62,7 @@ public class RollingAppenderDeleteScriptFri13thTest {
         }
         assertEquals(30, dir.listFiles().length, "Dir " + DIR + " filecount");
 
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderDeleteScriptFri13thTest.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingAppenderDeleteScriptFri13thTest.class.getName());
         // Trigger the rollover
         while (dir.listFiles().length < 32) {
             // 60+ chars per message: each message should trigger a rollover

@@ -57,9 +57,9 @@ public class RollingAppenderCronTest {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
         // TODO Is there a better way to test than putting the thread to sleep all over the place?
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderCronTest.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingAppenderCronTest.class.getName());
         final File file = new File(FILE);
         assertTrue(file.exists(), "Log file does not exist");
         logger.debug("This is test message number 1");
@@ -97,7 +97,7 @@ public class RollingAppenderCronTest {
         }
         Thread.sleep(1000);
         final RollingFileAppender app =
-                (RollingFileAppender) loggerContextRule.getConfiguration().getAppender("RollingFile");
+                (RollingFileAppender) loggerContext.getConfiguration().getAppender("RollingFile");
         final TriggeringPolicy policy = app.getManager().getTriggeringPolicy();
         assertNotNull(policy, "No triggering policy");
         assertTrue(policy instanceof CronTriggeringPolicy, "Incorrect policy type");

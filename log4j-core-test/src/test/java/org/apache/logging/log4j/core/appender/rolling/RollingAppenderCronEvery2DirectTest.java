@@ -50,9 +50,9 @@ public class RollingAppenderCronEvery2DirectTest {
             this.getClass().getClassLoader());
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
         // TODO Is there a better way to test than putting the thread to sleep all over the place?
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderCronEvery2DirectTest.class.getName());
+        final Logger logger = loggerContext.getLogger(RollingAppenderCronEvery2DirectTest.class.getName());
         final long end = System.currentTimeMillis() + 5000;
         final Random rand = new SecureRandom();
         rand.setSeed(end);

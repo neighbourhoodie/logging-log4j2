@@ -95,15 +95,14 @@ public class RollingAppenderRestartTest {
     }
 
     @Test
-    public void testAppender(final LoggerContext loggerContextRule) throws Exception {
-        final Logger logger = loggerContextRule.getLogger(RollingAppenderRestartTest.class.getName());
+    public void testAppender(final LoggerContext loggerContext) throws Exception {
+        final Logger logger = loggerContext.getLogger(RollingAppenderRestartTest.class.getName());
         logger.info("This is test message number 1");
         // The GZ compression takes place asynchronously.
         // Make sure it's done before validating.
         Thread.yield();
         final String name = "RollingFile";
-        final RollingFileAppender appender =
-                loggerContextRule.getConfiguration().getAppender(name);
+        final RollingFileAppender appender = loggerContext.getConfiguration().getAppender(name);
         assertNotNull(appender, name);
         if (appender.getManager().getSemaphore().tryAcquire(5, TimeUnit.SECONDS)) {
             // If we are in here, either the rollover is done or has not taken place yet.

@@ -44,8 +44,8 @@ public class RollingAppenderDirectWriteWithFilenameTest {
             this.getClass().getClassLoader());
 
     @BeforeEach
-    public void setUp(final LoggerContext loggerContextRule) {
-        this.logger = loggerContextRule.getLogger(RollingAppenderDirectWriteWithFilenameTest.class.getName());
+    public void setUp(final LoggerContext loggerContext) {
+        this.logger = loggerContext.getLogger(RollingAppenderDirectWriteWithFilenameTest.class.getName());
     }
 
     @Test
