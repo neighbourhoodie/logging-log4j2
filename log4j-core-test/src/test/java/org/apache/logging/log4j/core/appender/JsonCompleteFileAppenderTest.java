@@ -29,11 +29,13 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.impl.Log4jLogEventTest;
 import org.apache.logging.log4j.core.selector.ContextSelector;
 import org.apache.logging.log4j.core.selector.CoreContextSelectors;
+import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.util.ClockFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -42,6 +44,11 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 @Tag("Layouts.Json")
 public class JsonCompleteFileAppenderTest {
+
+    private final File logFile = new File("target", "JsonCompleteFileAppenderTest.log");
+
+    @RegisterExtension
+    CleanFiles cleanFiles = new CleanFiles(logFile);
 
     @BeforeAll
     public static void beforeAll() {
@@ -57,8 +64,6 @@ public class JsonCompleteFileAppenderTest {
     public static Stream<Class<?>> getParameters() {
         return Stream.of(CoreContextSelectors.CLASSES);
     }
-
-    private final File logFile = new File("target", "JsonCompleteFileAppenderTest.log");
 
     @ParameterizedTest
     @MethodSource("getParameters")
