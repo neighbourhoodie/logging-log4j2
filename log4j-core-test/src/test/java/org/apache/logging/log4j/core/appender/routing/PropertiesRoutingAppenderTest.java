@@ -36,6 +36,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 /**
  *
  */
+@LoggerContextSource("log4j-routing.properties")
 public class PropertiesRoutingAppenderTest {
     private static final String UNKNOWN_LOG_FILE = "target/rolling1/rollingtestProps-Unknown.log";
     private static final String ALERT_LOG_FILE = "target/routing1/routingtestProps-Alert.log";
@@ -62,7 +63,6 @@ public class PropertiesRoutingAppenderTest {
         this.context.stop();
     }
 
-    @LoggerContextSource("log4j-routing.properties")
     @Test
     public void routingTest() {
         StructuredDataMessage msg = new StructuredDataMessage("Test", "This is a test", "Service");
