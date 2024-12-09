@@ -77,7 +77,6 @@ public class JmsAppenderTest {
 
     @RegisterExtension
     private final JndiRule jndiRule = new JndiRule(createBindings());
-    // private final LoggerContextRule ctx = new LoggerContextRule("JmsAppenderTest.xml");
 
     private LoggerContext ctx = null;
 
