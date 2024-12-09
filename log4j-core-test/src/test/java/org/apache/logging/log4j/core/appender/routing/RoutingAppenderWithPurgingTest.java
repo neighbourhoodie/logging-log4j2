@@ -50,7 +50,15 @@ public class RoutingAppenderWithPurgingTest {
 
     @RegisterExtension
     CleanFiles cleanFiles = new CleanFiles(
-            IDLE_LOG_FILE1, IDLE_LOG_FILE2, IDLE_LOG_FILE3, MANUAL_LOG_FILE1, MANUAL_LOG_FILE2, MANUAL_LOG_FILE3);
+            false,
+            true,
+            10,
+            IDLE_LOG_FILE1,
+            IDLE_LOG_FILE2,
+            IDLE_LOG_FILE3,
+            MANUAL_LOG_FILE1,
+            MANUAL_LOG_FILE2,
+            MANUAL_LOG_FILE3);
 
     @Test
     @Timeout(5000)

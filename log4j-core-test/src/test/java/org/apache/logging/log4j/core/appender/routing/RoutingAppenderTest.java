@@ -50,7 +50,7 @@ public class RoutingAppenderTest {
     }
 
     @RegisterExtension
-    CleanFiles cleanFiles = new CleanFiles(UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
+    CleanFiles cleanFiles = new CleanFiles(false, true, 10, UNKNOWN_LOG_FILE, ALERT_LOG_FILE, ACTIVITY_LOG_FILE);
 
     @BeforeEach
     public void beforeEach() {

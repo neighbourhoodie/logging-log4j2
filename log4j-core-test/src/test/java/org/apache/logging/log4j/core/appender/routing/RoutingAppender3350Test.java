@@ -45,7 +45,7 @@ public class RoutingAppender3350Test {
     }
 
     @RegisterExtension
-    CleanFiles cleanFiles = new CleanFiles(LOG_FILE);
+    CleanFiles cleanFiles = new CleanFiles(false, true, 10, LOG_FILE);
 
     @AfterEach
     public void tearDown() throws Exception {

@@ -39,7 +39,7 @@ public class JsonRoutingAppender2Test {
     private static final String LOG_FILENAME = "target/rolling1/rollingtest-Unknown.log";
 
     @RegisterExtension
-    CleanFiles cleanFiles = new CleanFiles(LOG_FILENAME);
+    CleanFiles cleanFiles = new CleanFiles(false, true, 10, LOG_FILENAME);
 
     @Test
     public void routingTest(final LoggerContext loggerContext) {
