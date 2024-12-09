@@ -28,8 +28,8 @@ import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.message.StructuredDataMessage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
@@ -38,10 +38,8 @@ import org.junit.jupiter.api.Test;
 public class RoutingDefaultAppenderTest {
     private static final String LOG_FILE = "target/routing1/routingtest.log";
 
-    @BeforeEach
-    public void beforeEach() {
-        new CleanFiles(LOG_FILE);
-    }
+    @RegisterExtension
+    CleanFiles cleanFiles = new CleanFiles(false, true, 10, LOG_FILE);
 
     @Test
     public void routingTest(final LoggerContext loggerContext) {
