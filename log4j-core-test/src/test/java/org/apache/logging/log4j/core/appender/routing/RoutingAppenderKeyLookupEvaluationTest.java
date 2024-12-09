@@ -38,7 +38,8 @@ public class RoutingAppenderKeyLookupEvaluationTest {
     }
 
     @AfterEach
-    public void tearDown(@Named("List") final ListAppender app, final LoggerContext loggerContext) throws Exception {
+    public void tearDown(@Named("List") final ListAppender app) throws Exception {
+        app.clear();
         ThreadContext.remove(KEY);
     }
 

@@ -43,11 +43,7 @@ public class RoutingAppenderWithJndiTest {
     public static final String JNDI_CONTEXT_NAME = "java:comp/env/logging/context-name";
 
     @RegisterExtension
-    private JndiRule jndiRule;
-
-    public RoutingAppenderWithJndiTest() {
-        this.jndiRule = new JndiRule(initBindings());
-    }
+    private JndiRule jndiRule = new JndiRule(initBindings());
 
     private static Map<String, Object> initBindings() {
         System.setProperty("log4j2.enableJndiLookup", "true");

@@ -27,7 +27,6 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.apache.logging.log4j.core.test.junit.CleanFiles;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
-import org.apache.logging.log4j.core.test.junit.Named;
 import org.apache.logging.log4j.message.StructuredDataMessage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +55,7 @@ public class PropertiesRoutingAppenderTest {
     }
 
     @AfterEach
-    public void tearDown(@Named("List") final ListAppender appender) throws Exception {
+    public void tearDown() throws Exception {
         this.app.clear();
         this.context.stop();
     }
