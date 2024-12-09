@@ -16,6 +16,8 @@
  */
 package org.apache.logging.log4j.core.appender.mom.kafka;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.clients.producer.MockProducer;
@@ -79,6 +81,7 @@ public class KafkaAppenderCloseTimeoutTest {
     @Test
     @Timeout(2000)
     public void testClose(@Named("KafkaAppender") final Appender appender) {
+        assertNotNull(appender, "Appender named KafkaAppender was null.");
         appender.stop();
     }
 }
