@@ -31,7 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
 @Tag("Appenders.Kafka")
-@LoggerContextSource(value = "KafkaAppenderCloseTimeoutTest.xml")
+@LoggerContextSource("KafkaAppenderCloseTimeoutTest.xml")
 public class KafkaAppenderCloseTimeoutTest {
 
     private static final Serializer<byte[]> SERIALIZER = new ByteArraySerializer();

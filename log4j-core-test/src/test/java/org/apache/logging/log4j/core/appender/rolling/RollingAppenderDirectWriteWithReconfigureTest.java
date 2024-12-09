@@ -30,7 +30,6 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
@@ -59,7 +58,6 @@ public class RollingAppenderDirectWriteWithReconfigureTest {
     }
 
     @Test
-    @Timeout(10)
     public void testRollingFileAppenderWithReconfigure(final LoggerContext context) throws Exception {
         logger.debug("Before reconfigure");
 

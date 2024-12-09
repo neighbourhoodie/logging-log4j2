@@ -16,6 +16,8 @@
  */
 package org.apache.logging.log4j.core.async;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +32,6 @@ import org.apache.logging.log4j.core.util.Constants;
 import org.apache.logging.log4j.spi.ExtendedLogger;
 import org.apache.logging.log4j.util.Strings;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -79,9 +80,9 @@ public class Log4j2Jira1688Test {
         ((ExtendedLogger) log4JLogger).logIfEnabled("test", Level.ERROR, null, "test {}", args);
 
         listAppender.countDownLatch.await(1, TimeUnit.SECONDS);
-        Assertions.assertArrayEquals(originalArgs, args, Arrays.toString(args));
+        assertArrayEquals(originalArgs, args, Arrays.toString(args));
 
         ((ExtendedLogger) log4JLogger).logIfEnabled("test", Level.ERROR, null, "test {}", args);
-        Assertions.assertArrayEquals(originalArgs, args, Arrays.toString(args));
+        assertArrayEquals(originalArgs, args, Arrays.toString(args));
     }
 }

@@ -45,8 +45,6 @@ public class NestedLoggingFromThrowableMessageTest {
 
     @BeforeAll
     public static void beforeAll() {
-        // file1.delete();
-        // file2.delete();
         System.setProperty("log4j2.enableThreadlocals", "true");
     }
 

@@ -40,7 +40,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 /**
  * Tests a "complete" JSON file.
  */
-@Tag("Layouts.Xml")
+@Tag("Layouts.Json")
 public class JsonCompleteFileAppenderTest {
 
     @BeforeAll

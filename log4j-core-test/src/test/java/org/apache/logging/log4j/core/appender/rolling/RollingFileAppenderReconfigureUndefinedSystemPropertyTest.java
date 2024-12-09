@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 public class RollingFileAppenderReconfigureUndefinedSystemPropertyTest {
 
     @Test
-    @LoggerContextSource(value = "src/test/rolling-file-appender-reconfigure.original.xml")
+    @LoggerContextSource("src/test/rolling-file-appender-reconfigure.original.xml")
     public void testReconfigure(final LoggerContext loggerContextRule) {
         loggerContextRule.reconfigure();
     }

@@ -17,8 +17,6 @@
 package org.apache.logging.log4j.core.appender.db.jdbc;
 
 import javax.sql.DataSource;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -28,13 +26,11 @@ import org.junit.jupiter.api.BeforeAll;
 public abstract class AbstractJdbcDataSourceTest {
 
     @AfterAll
-    @AfterClass
     public static void afterClass() {
         System.clearProperty("log4j2.enableJndiJdbc");
     }
 
     @BeforeAll
-    @BeforeClass
     public static void beforeClass() {
         System.setProperty("log4j2.enableJndiJdbc", "true");
     }
