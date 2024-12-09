@@ -32,6 +32,7 @@ import org.apache.logging.log4j.core.net.SocketOptions;
 import org.apache.logging.log4j.core.net.TcpSocketManager;
 import org.apache.logging.log4j.core.test.AvailablePortFinder;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
+import org.apache.logging.log4j.core.util.NullOutputStream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
@@ -69,7 +70,7 @@ public class SocketAppenderSocketOptionsTest {
         final TcpSocketManager manager = (TcpSocketManager) appender.getManager();
         assertNotNull(manager);
         final OutputStream outputStream = manager.getOutputStream();
-        // assertFalse(outputStream instanceof NullOutputStream);
+        assertFalse(outputStream instanceof NullOutputStream);
         final SocketOptions socketOptions = manager.getSocketOptions();
         assertNotNull(socketOptions);
         final Socket socket = manager.getSocket();
