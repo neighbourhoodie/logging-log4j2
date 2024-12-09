@@ -34,7 +34,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 
-@LoggerContextSource("log4j-routing3350.xml")
 public class RoutingAppender3350Test {
     private static final String LOG_FILE = "target/tmp/test.log";
 
@@ -53,6 +52,7 @@ public class RoutingAppender3350Test {
     }
 
     @Test
+    @LoggerContextSource("log4j-routing3350.xml")
     public void routingTest(final LoggerContext loggerContext) throws IOException {
         final String expected = "expectedValue";
         final StringMapMessage message = new StringMapMessage().with("data", expected);

@@ -36,7 +36,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 /**
  *
  */
-@LoggerContextSource("log4j-routing.xml")
 public class RoutingAppenderTest {
     private static final String UNKNOWN_LOG_FILE = "target/rolling1/rollingtest-Unknown.log";
     private static final String ALERT_LOG_FILE = "target/routing1/routingtest-Alert.log";
@@ -64,6 +63,7 @@ public class RoutingAppenderTest {
     }
 
     @Test
+    @LoggerContextSource("log4j-routing.xml")
     public void routingTest() {
         StructuredDataMessage msg = new StructuredDataMessage("Test", "This is a test", "Service");
         EventLogger.logEvent(msg);

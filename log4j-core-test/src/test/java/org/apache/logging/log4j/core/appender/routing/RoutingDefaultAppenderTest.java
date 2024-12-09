@@ -34,7 +34,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 /**
  *
  */
-@LoggerContextSource("log4j-routing3.xml")
 public class RoutingDefaultAppenderTest {
     private static final String LOG_FILE = "target/routing1/routingtest.log";
 
@@ -42,6 +41,7 @@ public class RoutingDefaultAppenderTest {
     CleanFiles cleanFiles = new CleanFiles(false, true, 10, LOG_FILE);
 
     @Test
+    @LoggerContextSource("log4j-routing3.xml")
     public void routingTest(final LoggerContext loggerContext) {
         StructuredDataMessage msg = new StructuredDataMessage("Test", "This is a test", "Service");
         EventLogger.logEvent(msg);
