@@ -20,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -34,14 +32,11 @@ import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.appender.ListAppender;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
-import org.apache.logging.log4j.core.test.junit.Named;
 import org.apache.logging.log4j.core.test.junit.ReconfigurationPolicy;
 import org.apache.logging.log4j.message.ObjectArrayMessage;
 import org.apache.logging.log4j.test.junit.UsingThreadContextStack;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * Tests {@link AbstractCsvLayout}.
@@ -53,19 +48,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 @LoggerContextSource(reconfigure = ReconfigurationPolicy.AFTER_EACH)
 public class CsvParameterLayoutTest {
 
-    static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-            {"csvParamsSync.xml"}, {"csvParamsMixedAsync.xml"},
-        });
-    }
-
-    private final LoggerContext init;
-
-    public CsvParameterLayoutTest(final LoggerContext context) {
-        this.init = context;
-    }
-
-    @Test
     public void testCustomCharset() {
         final AbstractCsvLayout layout = CsvParameterLayout.createLayout(
                 null, "Excel", null, null, null, null, null, null, StandardCharsets.UTF_16, null, null);
@@ -73,15 +55,49 @@ public class CsvParameterLayoutTest {
     }
 
     @Test
+    @LoggerContextSource("csvParamsSync.xml")
+    public void testCustomCharsetcsvParamsSync() {
+        testCustomCharset();
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsMixedAsync.xml")
+    public void testCustomCharsetcsvParamsMixedAsync() {
+        testCustomCharset();
+    }
+
     public void testDefaultCharset() {
         final AbstractCsvLayout layout = CsvParameterLayout.createDefaultLayout();
         assertEquals(StandardCharsets.UTF_8, layout.getCharset());
     }
 
     @Test
+    @LoggerContextSource("csvParamsSync.xml")
+    public void testDefaultCharsetcsvParamsSync() {
+        testDefaultCharset();
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsMixedAsync.xml")
+    public void testDefaultCharsetcsvParamsMixedAsync() {
+        testDefaultCharset();
+    }
+
     public void testDefaultContentType() {
         final AbstractCsvLayout layout = CsvParameterLayout.createDefaultLayout();
         assertEquals("text/csv; charset=UTF-8", layout.getContentType());
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsSync.xml")
+    public void testDefaultContentTypecsvParamsSync() {
+        testDefaultContentType();
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsMixedAsync.xml")
+    public void testDefaultContentTypecsvParamsMixedAsync() {
+        testDefaultContentType();
     }
 
     static void testLayoutNormalApi(final Logger root, final AbstractCsvLayout layout, final boolean messageApi)
@@ -142,31 +158,59 @@ public class CsvParameterLayoutTest {
         root.debug(new ObjectArrayMessage(7, 8, 9, 10));
     }
 
-    @ParameterizedTest
-    @MethodSource("data")
-    public void testLayoutDefaultNormal(String config) throws Exception {
-        final LoggerContext ctx = new LoggerContext(config);
-        final Logger root = ctx.getRootLogger();
+    public void testLayoutDefaultNormal(final LoggerContext context) throws Exception {
+        final Logger root = context.getRootLogger();
         testLayoutNormalApi(root, CsvParameterLayout.createDefaultLayout(), false);
     }
 
-    @ParameterizedTest
-    @MethodSource("data")
-    public void testLayoutDefaultObjectArrayMessage(String config) throws Exception {
-        final LoggerContext ctx = new LoggerContext(config);
-        final Logger root = init.getRootLogger();
+    @Test
+    @LoggerContextSource("csvParamsSync.xml")
+    public void testLayoutDefaultNormalCsvParamsSync(final LoggerContext context) throws Exception {
+        testLayoutDefaultNormal(context);
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsMixedAsync.xml")
+    public void testLayoutDefaultNormalCsvParamsMixedAsync(final LoggerContext context) throws Exception {
+        testLayoutDefaultNormal(context);
+    }
+
+    public void testLayoutDefaultObjectArrayMessage(final LoggerContext context) throws Exception {
+        final Logger root = context.getRootLogger();
         testLayoutNormalApi(root, CsvParameterLayout.createDefaultLayout(), true);
     }
 
-    @ParameterizedTest
-    @MethodSource("data")
-    public void testLayoutTab(String config) throws Exception {
-        final LoggerContext ctx = new LoggerContext(config);
-        final Logger root = init.getRootLogger();
+    @Test
+    @LoggerContextSource("csvParamsSync.xml")
+    public void testLayoutDefaultObjectArrayMessageCsvParamsSync(final LoggerContext context) throws Exception {
+        testLayoutDefaultObjectArrayMessage(context);
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsMixedAsync.xml")
+    public void testLayoutDefaultObjectArrayMessageCsvParamsMixedAsync(final LoggerContext context) throws Exception {
+        testLayoutDefaultObjectArrayMessage(context);
+    }
+
+    public void testLayoutTab(final LoggerContext context) throws Exception {
+        final Logger root = context.getRootLogger();
         testLayoutNormalApi(root, CsvParameterLayout.createLayout(CSVFormat.TDF), true);
     }
 
-    public void testLogJsonArgument(@Named("list") final ListAppender appender) throws InterruptedException {
+    @Test
+    @LoggerContextSource("csvParamsSync.xml")
+    public void testLayoutTabCsvParamsSync(final LoggerContext context) throws Exception {
+        testLayoutTab(context);
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsMixedAsync.xml")
+    public void testLayoutTabCsvParamsMixedAsync(final LoggerContext context) throws Exception {
+        testLayoutTab(context);
+    }
+
+    public void testLogJsonArgument(final LoggerContext context) throws InterruptedException {
+        final ListAppender appender = context.getConfiguration().getAppender("List");
         appender.countDownLatch = new CountDownLatch(4);
         appender.clear();
         final Logger logger = (Logger) LogManager.getRootLogger();
@@ -184,5 +228,17 @@ public class CsvParameterLayoutTest {
         final List<String> list = appender.getMessages();
         final String eventStr = list.get(0).toString();
         assertTrue(eventStr.contains(json), eventStr);
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsSync.xml")
+    public void testLogJsonArgumentCsvParamsSync(final LoggerContext context) throws InterruptedException {
+        testLogJsonArgument(context);
+    }
+
+    @Test
+    @LoggerContextSource("csvParamsMixedAsync.xml")
+    public void testLogJsonArgumentCsvParamsMixedAsync(final LoggerContext context) throws InterruptedException {
+        testLogJsonArgument(context);
     }
 }
