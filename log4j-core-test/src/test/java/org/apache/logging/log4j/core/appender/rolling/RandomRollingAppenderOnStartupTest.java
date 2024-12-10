@@ -22,15 +22,12 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Stream;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 
 /**
  *
@@ -39,10 +36,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class RandomRollingAppenderOnStartupTest {
 
     private static final String DIR = "target/onStartup";
-
-    public static Stream<Arguments> data() {
-        return Stream.of(Arguments.of("log4j-test5.xml"), Arguments.of("log4j-test5.xml"));
-    }
 
     @BeforeAll
     public static void beforeAll() throws Exception {
@@ -78,10 +71,9 @@ public class RandomRollingAppenderOnStartupTest {
         }
     }
 
-    @ParameterizedTest(name = "{0} \u2192 {1}")
-    @MethodSource("data")
-    public void testAppender(String configFile) {
-        LoggerContext loggerContext = new LoggerContext(configFile);
+    @Test
+    @LoggerContextSource("log4j-test5.xml")
+    public void testAppender(final LoggerContext loggerContext) {
         Logger logger = loggerContext.getLogger(RandomRollingAppenderOnStartupTest.class.getName());
 
         for (int i = 0; i < 100; ++i) {
