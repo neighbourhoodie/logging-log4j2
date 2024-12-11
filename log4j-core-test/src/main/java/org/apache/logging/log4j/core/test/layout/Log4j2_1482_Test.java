@@ -28,9 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.test.junit.CleanFolders;
+import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests https://issues.apache.org/jira/browse/LOG4J2-1482
@@ -41,6 +42,13 @@ public abstract class Log4j2_1482_Test {
     static final String CONFIG_LOCATION = "log4j2-1482.xml";
 
     static final String FOLDER = "target/log4j2-1482";
+
+    @RegisterExtension
+    private CleanFoldersRuleExtension cleanFolders = new CleanFoldersRuleExtension(
+            FOLDER,
+            CONFIG_LOCATION,
+            Log4j2_1482_Test.class.getName(),
+            this.getClass().getClassLoader());
 
     private static final int LOOP_COUNT = 10;
 
@@ -59,8 +67,6 @@ public abstract class Log4j2_1482_Test {
             }
         }
     }
-
-    static CleanFolders cleanFolders = new CleanFolders(FOLDER);
 
     protected abstract void log(int runNumber);
 
