@@ -23,13 +23,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
-import org.apache.logging.log4j.core.test.junit.CleanFolders;
+import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.apache.logging.log4j.core.test.junit.LoggerContextSource;
 import org.apache.logging.log4j.core.test.junit.Named;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Test LOG4J2-2485.
@@ -44,6 +43,13 @@ public class RollingAppenderDirectWriteStartupSizeTest {
 
     private static final String MESSAGE = "test message";
 
+    @RegisterExtension
+    private CleanFoldersRuleExtension cleanFolders = new CleanFoldersRuleExtension(
+            DIR,
+            CONFIG,
+            RollingAppenderDirectWriteStartupSizeTest.class.getName(),
+            this.getClass().getClassLoader());
+
     @BeforeAll
     public static void beforeAll() throws Exception {
         final Path log = Paths.get(DIR, FILE);
@@ -54,18 +60,6 @@ public class RollingAppenderDirectWriteStartupSizeTest {
         Files.createDirectories(log.getParent());
         Files.createFile(log);
         Files.write(log, MESSAGE.getBytes());
-    }
-
-    @BeforeEach
-    @LoggerContextSource(value = CONFIG, timeout = 10)
-    public void setUp() throws Exception {
-        new CleanFolders(false, true, 10, DIR);
-    }
-
-    @AfterEach
-    @LoggerContextSource(value = CONFIG, timeout = 10)
-    public void teardown() throws Exception {
-        new CleanFolders(false, true, 10, DIR);
     }
 
     @Test
