@@ -35,6 +35,7 @@ import org.apache.logging.log4j.core.test.junit.CleanFolders;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * Tests https://issues.apache.org/jira/browse/LOG4J2-1798
@@ -46,9 +47,11 @@ public class RollingFileAppenderInterruptedThreadTest {
 
     LoggerContext loggerContext;
 
+    @RegisterExtension
+    private CleanFolders cleanFolders = new CleanFolders(true, false, 3, ROLLING_APPENDER_FILES_DIR);
+
     @BeforeEach
     public void setUp() {
-        new CleanFolders(true, false, 3, ROLLING_APPENDER_FILES_DIR);
         final ConfigurationBuilder<BuiltConfiguration> builder = ConfigurationBuilderFactory.newConfigurationBuilder();
         builder.setConfigurationName("LOG4J2-1798 test");
 
@@ -72,7 +75,6 @@ public class RollingFileAppenderInterruptedThreadTest {
     public void tearDown() {
         Configurator.shutdown(loggerContext);
         loggerContext = null;
-        new CleanFolders(true, false, 3, ROLLING_APPENDER_FILES_DIR);
     }
 
     @Test
