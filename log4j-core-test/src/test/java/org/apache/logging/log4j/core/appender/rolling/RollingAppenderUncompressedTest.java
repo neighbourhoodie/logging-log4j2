@@ -24,12 +24,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.config.ConfigurationFactory;
-import org.apache.logging.log4j.core.test.junit.CleanFoldersRuleExtension;
 import org.apache.logging.log4j.status.StatusLogger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  *
@@ -41,12 +39,12 @@ public class RollingAppenderUncompressedTest {
 
     private final Logger logger = LogManager.getLogger(RollingAppenderUncompressedTest.class.getName());
 
-    @RegisterExtension
-    private CleanFoldersRuleExtension cleanFolders = new CleanFoldersRuleExtension(
-            DIR,
-            CONFIG,
-            RollingAppenderUncompressedTest.class.getName(),
-            this.getClass().getClassLoader());
+    // @RegisterExtension
+    // private CleanFoldersRuleExtension cleanFolders = new CleanFoldersRuleExtension(
+    //         DIR,
+    //         CONFIG,
+    //         RollingAppenderUncompressedTest.class.getName(),
+    //         this.getClass().getClassLoader());
 
     @BeforeAll
     public static void setupAll() {
