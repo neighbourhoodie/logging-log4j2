@@ -29,21 +29,18 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 
 public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
-    private final String DIR;
     private final String CONFIG;
     private final String ClassName;
     private final ClassLoader ClassNameLoader;
     private LoggerContext context;
-    private boolean before;
-    private boolean after;
-    private int maxTries;
+    private CleanFolders cleanFolders;
 
     public CleanFoldersRuleExtension(
             final String DIR, final String CONFIG, final String ClassName, final ClassLoader ClassNameLoader) {
-        this.DIR = DIR;
         this.CONFIG = CONFIG;
         this.ClassName = ClassName;
         this.ClassNameLoader = ClassNameLoader;
+        this.cleanFolders = new CleanFolders(DIR);
     }
 
     public CleanFoldersRuleExtension(
@@ -54,22 +51,15 @@ public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachC
             final boolean before,
             final boolean after,
             final int maxTries) {
-        this.DIR = DIR;
         this.CONFIG = CONFIG;
         this.ClassName = ClassName;
         this.ClassNameLoader = ClassNameLoader;
-        this.before = before;
-        this.after = after;
-        this.maxTries = maxTries;
+        this.cleanFolders = new CleanFolders(before, after, maxTries, DIR);
     }
 
     @Override
     public void beforeEach(final ExtensionContext ctx) throws Exception {
-        if (before || after || maxTries > 0) {
-            new CleanFolders(before, after, maxTries, DIR);
-        } else {
-            new CleanFolders(DIR);
-        }
+        this.cleanFolders.beforeEach(ctx);
         this.context = Configurator.initialize(ClassName, ClassNameLoader, CONFIG);
     }
 
@@ -79,11 +69,7 @@ public class CleanFoldersRuleExtension implements BeforeEachCallback, AfterEachC
             Configurator.shutdown(this.context, 10, TimeUnit.SECONDS);
             StatusLogger.getLogger().reset();
         }
-        if (before || after || maxTries > 0) {
-            new CleanFolders(before, after, maxTries, DIR);
-        } else {
-            new CleanFolders(DIR);
-        }
+        this.cleanFolders.afterEach(ctx);
     }
 
     @Override

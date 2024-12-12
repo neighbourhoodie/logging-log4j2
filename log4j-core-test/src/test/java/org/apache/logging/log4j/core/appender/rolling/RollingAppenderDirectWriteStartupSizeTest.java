@@ -48,7 +48,10 @@ public class RollingAppenderDirectWriteStartupSizeTest {
             DIR,
             CONFIG,
             RollingAppenderDirectWriteStartupSizeTest.class.getName(),
-            this.getClass().getClassLoader());
+            this.getClass().getClassLoader(),
+            false,
+            true,
+            10);
 
     @BeforeAll
     public static void beforeAll() throws Exception {
