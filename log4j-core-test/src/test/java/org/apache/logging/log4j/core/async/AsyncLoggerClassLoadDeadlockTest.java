@@ -42,7 +42,7 @@ class AsyncLoggerClassLoadDeadlockTest {
     }
 
     @Test
-    @Timeout(value = 30000, unit = TimeUnit.MILLISECONDS)
+    @Timeout(value = 30, unit = TimeUnit.SECONDS)
     void testClassLoaderDeadlock() {
         // touch the class so static init will be called
         final AsyncLoggerClassLoadDeadlock temp = new AsyncLoggerClassLoadDeadlock();

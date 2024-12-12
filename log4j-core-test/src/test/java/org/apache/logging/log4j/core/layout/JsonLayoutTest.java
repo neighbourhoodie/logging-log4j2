@@ -16,13 +16,13 @@
  */
 package org.apache.logging.log4j.core.layout;
 
-import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -430,7 +430,7 @@ class JsonLayoutTest {
             assertTrue(str.contains("\"message\":\"" + expectedMessage + '"'), str);
             final Log4jLogEvent actual =
                     new Log4jJsonObjectMapper(propertiesAsList, true, false, false).readValue(str, Log4jLogEvent.class);
-            assertEquals(expectedMessage, actual.getMessage().getFormattedMessage());
+            assertEquals(actual.getMessage().getFormattedMessage(), expectedMessage);
         } finally {
             ReusableMessageFactory.release(message);
         }
@@ -474,7 +474,7 @@ class JsonLayoutTest {
             assertThat(str, containsString("\"message\":\"" + expectedMessage + '"'));
             final Log4jLogEvent actual =
                     new Log4jJsonObjectMapper(propertiesAsList, true, false, false).readValue(str, Log4jLogEvent.class);
-            assertEquals(expectedMessage, actual.getMessage().getFormattedMessage());
+            assertEquals(actual.getMessage().getFormattedMessage(), expectedMessage);
         } finally {
             ReusableMessageFactory.release(message);
         }

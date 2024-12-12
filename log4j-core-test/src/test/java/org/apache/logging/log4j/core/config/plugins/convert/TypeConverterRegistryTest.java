@@ -29,8 +29,9 @@ class TypeConverterRegistryTest {
 
     @Test
     void testFindNullConverter() {
-        assertThrows(NullPointerException.class, () -> TypeConverterRegistry.getInstance()
-                .findCompatibleConverter(null));
+        assertThrows(NullPointerException.class, () -> {
+            TypeConverterRegistry.getInstance().findCompatibleConverter(null);
+        });
     }
 
     @Test

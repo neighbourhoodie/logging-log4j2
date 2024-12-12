@@ -16,8 +16,8 @@
  */
 package org.apache.logging.log4j.core.config.plugins.util;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +91,7 @@ class ResolverUtilCustomProtocolTest {
                 oldFactory = (URLStreamHandlerFactory) factoryField.get(null);
             }
         }
-        assertThat(factoryField).as("java.net.URL#factory field").isNotNull();
+        assertNotNull(factoryField, "java.net.URL#factory field is null");
         URL.setURLStreamHandlerFactory(new NoopURLStreamHandlerFactory());
     }
 
@@ -174,7 +174,7 @@ class ResolverUtilCustomProtocolTest {
     @MethodSource
     void testExtractedPath(final String urlAsString, final String expected) throws Exception {
         final URL url = new URL(urlAsString);
-        assertThat(new ResolverUtil().extractPath(url)).isEqualTo(expected);
+        assertEquals(new ResolverUtil().extractPath(url), expected);
     }
 
     @Test

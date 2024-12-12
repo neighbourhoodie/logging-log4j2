@@ -18,8 +18,7 @@ package org.apache.logging.log4j.core.pattern;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -28,8 +27,8 @@ import org.junit.jupiter.params.provider.MethodSource;
  */
 class NameAbbreviatorTest {
 
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+    public static Stream<Object[]> data() {
+        return Stream.of(new Object[][] {
             // { pattern, expected }
             {"0", "NameAbbreviatorTest"},
             {"1", "NameAbbreviatorTest"},
